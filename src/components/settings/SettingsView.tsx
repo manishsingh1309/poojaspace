@@ -142,15 +142,15 @@ export const SettingsView: React.FC = () => {
         </a>
       </div>
 
-      {/* Install on Oppo Phone Guide */}
+      {/* Add to Home Screen Guide */}
       <div className="luxury-glass-card p-5 rounded-3xl border border-zinc-800/80 shadow-xl space-y-3">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-amber-400/15 text-amber-400 border border-amber-400/30 flex items-center justify-center shrink-0">
             <Smartphone className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white">Install on Oppo Phone</h3>
-            <p className="text-[11px] text-zinc-400">Add icon to home screen in 30 seconds</p>
+            <h3 className="text-sm font-bold text-white">Add App to Home Screen</h3>
+            <p className="text-[11px] text-zinc-400">Add icon to your phone screen in 30 seconds</p>
           </div>
         </div>
 
@@ -159,7 +159,7 @@ export const SettingsView: React.FC = () => {
             <span className="w-5 h-5 rounded-full bg-amber-400/20 text-amber-400 font-bold flex items-center justify-center text-[11px] shrink-0">
               1
             </span>
-            <span>Open in Chrome on your Oppo phone</span>
+            <span>Open in Chrome on your phone</span>
           </div>
 
           <div className="flex items-center gap-2.5 p-2.5 bg-zinc-900/60 rounded-xl border border-zinc-800/60">

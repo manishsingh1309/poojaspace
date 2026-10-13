@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, ShieldCheck, Smartphone, Sparkles } from 'lucide-react';
+import { Heart, ShieldCheck, Sparkles } from 'lucide-react';
 import { POOJA_SPECIAL_IMAGE } from '../../assets/personalPhotos';
 
 export const PersonalNote: React.FC = () => {
@@ -28,14 +28,14 @@ export const PersonalNote: React.FC = () => {
           Your photos, videos, and documents stay safely preserved in your personal Google Drive forever. Never worry about phone memory again.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 mt-3 text-[11px] text-zinc-400 font-semibold">
-          <span className="flex items-center gap-1.5 text-amber-400/90">
-            <Smartphone className="w-3.5 h-3.5" />
-            <span>Oppo F9 Pro &amp; Mobile Optimized</span>
-          </span>
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 mt-3 text-[11px] font-semibold">
           <span className="flex items-center gap-1.5 text-emerald-400">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Private Google Drive Vault</span>
+          </span>
+          <span className="flex items-center gap-1.5 text-amber-400/90">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Always Safe &amp; Preserved</span>
           </span>
         </div>
       </div>

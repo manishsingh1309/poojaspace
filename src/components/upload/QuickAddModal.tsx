@@ -67,7 +67,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
 
       <div className="space-y-4">
         <p className="text-xs text-zinc-400 leading-relaxed">
-          Select files from your Oppo phone. They stream directly to your private Google Drive without intermediate servers.
+          Select files from your phone or device. They stream directly to your private Google Drive without intermediate servers.
         </p>
 
         {/* Destination folder picker */}
@@ -192,9 +192,9 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
         <div className="bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 p-4 rounded-2xl border border-amber-500/20 flex items-start gap-3 text-xs">
           <Share2 className="w-4.5 h-4.5 text-amber-400 shrink-0 mt-0.5" />
           <div className="leading-relaxed">
-            <strong className="text-white">Direct Share from Oppo Gallery:</strong>
+            <strong className="text-white">Direct Share from Phone Gallery:</strong>
             <p className="text-zinc-400 mt-0.5">
-              Select any photos in your Oppo Gallery app, tap <strong>Share</strong>, and pick <strong>Poojaspace</strong>! Files arrive directly in your upload queue.
+              Select any photos in your phone Gallery app, tap <strong>Share</strong>, and choose <strong>Poojaspace</strong>! Files arrive directly in your upload queue.
             </p>
           </div>
         </div>

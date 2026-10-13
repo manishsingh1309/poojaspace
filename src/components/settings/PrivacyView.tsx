@@ -31,7 +31,7 @@ export const PrivacyView: React.FC = () => {
     {
       icon: Smartphone,
       title: 'Never deletes phone originals',
-      desc: 'Uploading to Poojaspace will never automatically remove or erase photos from your Oppo Gallery or phone storage. Your local photos stay exactly where they are.',
+      desc: 'Uploading to Poojaspace will never automatically remove or erase photos from your phone gallery or local storage. Your original photos stay exactly where they are.',
       color: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
     },
     {
