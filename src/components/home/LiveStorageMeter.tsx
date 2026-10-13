@@ -1,123 +1,180 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDrive } from '../../context/DriveContext';
 import { useAuth } from '../../context/AuthContext';
-import { HardDrive, Image as ImageIcon, Video, FileText, CheckCircle2 } from 'lucide-react';
+import { HardDrive, Image as ImageIcon, Video, RefreshCw, ShieldCheck, Sparkles } from 'lucide-react';
 
 export const LiveStorageMeter: React.FC = () => {
-  const { stats, accountQuota, isMockMode } = useDrive();
+  const { stats, accountQuota, refreshFiles } = useDrive();
   const { isAuthenticated } = useAuth();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const formatBytes = (bytes: number): string => {
-    if (!bytes || bytes === 0) return '0 B';
+    if (!bytes || bytes === 0) return '0 MB';
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
   };
 
-  // Real or mock quota
-  const totalLimit = accountQuota?.limit || 16106127360; // 15 GB default
+  // Real or mock quota (dynamically calculated)
+  const totalLimit = accountQuota?.limit || 16106127360; // 15 GB default Google quota
   const totalUsage = accountQuota?.usage || stats.totalBytes || 0;
   const freeBytes = Math.max(0, totalLimit - totalUsage);
   const percentUsed = Math.min(100, Math.max(1, Math.round((totalUsage / totalLimit) * 100)));
 
-  // Calculate proportional percentages for the visual segmented bar
-  const photoPercent = Math.max(0.5, (stats.totalBytes ? (stats.photoCount / (stats.fileCount || 1)) * percentUsed : 0.5));
-  const videoPercent = Math.max(0.5, (stats.totalBytes ? (stats.videoCount / (stats.fileCount || 1)) * percentUsed : 0.5));
+  // Proportional percentages for visual meter
+  const photoPercent = Math.max(
+    1,
+    Math.min(80, (stats.photoBytes / (totalLimit || 1)) * 100)
+  );
+  const videoPercent = Math.max(
+    0.5,
+    Math.min(80, (stats.videoBytes / (totalLimit || 1)) * 100)
+  );
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await refreshFiles();
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 600);
+    }
+  };
 
   return (
-    <div className="titanium-card p-4 sm:p-5 rounded-3xl border border-[#272733] shadow-lg space-y-4">
-      {/* Top Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/25 text-amber-400 flex items-center justify-center shrink-0">
-            <HardDrive className="w-5 h-5" />
+    <div className="luxury-glass-card rounded-3xl p-4 sm:p-6 border border-zinc-800/80 shadow-2xl relative overflow-hidden space-y-4">
+      {/* Ambient background illumination */}
+      <div className="absolute -top-16 -right-16 w-48 h-48 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Top Header Row */}
+      <div className="relative z-10 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-amber-400/15 border border-amber-400/30 text-amber-400 flex items-center justify-center shrink-0 shadow-gold-glow">
+            <HardDrive className="w-5 h-5 stroke-[2.2]" />
           </div>
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight flex items-center gap-1.5">
-              <span>Google Account Storage</span>
-              {isAuthenticated && (
-                <span className="text-[10px] text-emerald-400 font-semibold bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded-full">
-                  Live
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight">
+                Google Drive Storage
+              </h3>
+              {isAuthenticated ? (
+                <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-400/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Live Quota
+                </span>
+              ) : (
+                <span className="text-[10px] text-amber-400 font-semibold bg-amber-400/10 border border-amber-400/25 px-2 py-0.5 rounded-full">
+                  Preview
                 </span>
               )}
-            </h3>
-            <p className="text-[11px] text-zinc-400">
-              {isAuthenticated
-                ? `${formatBytes(totalUsage)} used of ${formatBytes(totalLimit)}`
-                : isMockMode
-                ? `${formatBytes(stats.totalBytes)} used • Connect Google Drive for live quota`
-                : 'Connecting to Google Drive...'}
+            </div>
+            <p className="text-xs text-zinc-400 mt-0.5">
+              {formatBytes(totalUsage)} used •{' '}
+              <strong className="text-white font-semibold">
+                {formatBytes(freeBytes)} Free
+              </strong>{' '}
+              of {formatBytes(totalLimit)}
             </p>
           </div>
         </div>
 
-        {/* Free Space Pill */}
-        <div className="text-right">
-          <span className="text-xs font-bold text-amber-400 block">
-            {formatBytes(freeBytes)} Free
+        {/* 1-Tap Refresh Button */}
+        <button
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          aria-label="Refresh storage quota"
+          className="p-2 text-zinc-400 hover:text-amber-400 hover:bg-zinc-800/80 rounded-xl transition-all active:scale-95 shrink-0"
+          title="Refresh storage"
+        >
+          <RefreshCw
+            className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-amber-400' : ''}`}
+          />
+        </button>
+      </div>
+
+      {/* Gradient Progress Capsule */}
+      <div className="relative z-10 space-y-2">
+        <div className="w-full h-3.5 bg-zinc-900/90 rounded-full overflow-hidden flex p-0.5 border border-zinc-800/80 shadow-inner">
+          {/* Photos Segment (Coral Amber Gradient) */}
+          <div
+            style={{ width: `${Math.min(85, photoPercent + 1.5)}%` }}
+            className="h-full bg-gradient-to-r from-rose-400 via-amber-400 to-amber-500 rounded-l-full transition-all duration-700 shadow-sm"
+            title="Photos storage"
+          />
+          {/* Videos Segment (Ultraviolet Gradient) */}
+          <div
+            style={{ width: `${Math.min(85, videoPercent + 1)}%` }}
+            className="h-full bg-gradient-to-r from-purple-400 to-indigo-500 transition-all duration-700"
+            title="Videos storage"
+          />
+        </div>
+
+        <div className="flex items-center justify-between text-[11px] text-zinc-400 px-0.5">
+          <span className="flex items-center gap-1 font-medium">
+            <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+            {percentUsed}% Drive used
           </span>
-          <span className="text-[10px] text-zinc-500">Available</span>
+          <span className="text-amber-400 font-bold">
+            {formatBytes(freeBytes)} Available
+          </span>
         </div>
       </div>
 
-      {/* Segmented Gradient Progress Bar */}
-      <div className="space-y-1.5">
-        <div className="w-full h-3 bg-zinc-800/80 rounded-full overflow-hidden flex p-0.5 border border-zinc-700/40">
-          {/* Photos Segment (Amber) */}
-          <div
-            style={{ width: `${Math.min(90, photoPercent + 1)}%` }}
-            className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-l-full transition-all duration-500"
-            title="Photos"
-          />
-          {/* Videos Segment (Purple) */}
-          <div
-            style={{ width: `${Math.min(90, videoPercent + 1)}%` }}
-            className="h-full bg-gradient-to-r from-purple-400 to-indigo-500 transition-all duration-500"
-            title="Videos"
-          />
-        </div>
-
-        <div className="flex items-center justify-between text-[10px] text-zinc-400 px-0.5">
-          <span>{percentUsed}% capacity used</span>
-          <span>{formatBytes(totalLimit)} Total Capacity</span>
-        </div>
-      </div>
-
-      {/* Visual Category Breakdown Badges */}
-      <div className="grid grid-cols-3 gap-2 pt-1 border-t border-zinc-800/70 text-center">
-        <div className="p-2 rounded-xl bg-zinc-900/60 border border-zinc-800/50">
-          <div className="flex items-center justify-center gap-1 text-[11px] font-semibold text-amber-400 mb-0.5">
-            <ImageIcon className="w-3 h-3" />
+      {/* 3 Metric Cards: Photos, Videos, Free Space */}
+      <div className="relative z-10 grid grid-cols-3 gap-2 sm:gap-3 pt-1">
+        {/* Photos Card */}
+        <div className="p-2.5 sm:p-3 rounded-2xl bg-zinc-900/70 border border-zinc-800/60 text-center hover:border-amber-400/40 transition-colors">
+          <div className="flex items-center justify-center gap-1 text-[11px] font-bold text-amber-400 mb-1">
+            <ImageIcon className="w-3.5 h-3.5" />
             <span>Photos</span>
           </div>
-          <span className="text-xs font-bold text-white block">{stats.photoCount} files</span>
+          <span className="text-xs sm:text-sm font-extrabold text-white block">
+            {stats.photoCount} items
+          </span>
+          <span className="text-[10px] text-zinc-400 font-medium">
+            {formatBytes(stats.photoBytes)}
+          </span>
         </div>
 
-        <div className="p-2 rounded-xl bg-zinc-900/60 border border-zinc-800/50">
-          <div className="flex items-center justify-center gap-1 text-[11px] font-semibold text-purple-400 mb-0.5">
-            <Video className="w-3 h-3" />
+        {/* Videos Card */}
+        <div className="p-2.5 sm:p-3 rounded-2xl bg-zinc-900/70 border border-zinc-800/60 text-center hover:border-purple-400/40 transition-colors">
+          <div className="flex items-center justify-center gap-1 text-[11px] font-bold text-purple-400 mb-1">
+            <Video className="w-3.5 h-3.5" />
             <span>Videos</span>
           </div>
-          <span className="text-xs font-bold text-white block">{stats.videoCount} files</span>
+          <span className="text-xs sm:text-sm font-extrabold text-white block">
+            {stats.videoCount} items
+          </span>
+          <span className="text-[10px] text-zinc-400 font-medium">
+            {formatBytes(stats.videoBytes)}
+          </span>
         </div>
 
-        <div className="p-2 rounded-xl bg-zinc-900/60 border border-zinc-800/50">
-          <div className="flex items-center justify-center gap-1 text-[11px] font-semibold text-emerald-400 mb-0.5">
-            <FileText className="w-3 h-3" />
-            <span>Vault</span>
+        {/* Free Space Card */}
+        <div className="p-2.5 sm:p-3 rounded-2xl bg-zinc-900/70 border border-zinc-800/60 text-center hover:border-emerald-400/40 transition-colors">
+          <div className="flex items-center justify-center gap-1 text-[11px] font-bold text-emerald-400 mb-1">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Free Space</span>
           </div>
-          <span className="text-xs font-bold text-white block">{stats.documentCount} docs</span>
+          <span className="text-xs sm:text-sm font-extrabold text-white block">
+            {formatBytes(freeBytes)}
+          </span>
+          <span className="text-[10px] text-zinc-400 font-medium">
+            {Math.max(0, 100 - percentUsed)}% free
+          </span>
         </div>
       </div>
 
-      {/* Reassurance Footer */}
-      <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-1">
-        <span className="flex items-center gap-1 text-emerald-400">
-          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-          <span>Zero Monthly Cloud Cost</span>
+      {/* Safety & Peace of Mind Reassurance */}
+      <div className="relative z-10 flex items-center justify-between text-[11px] text-zinc-400 pt-2 border-t border-zinc-800/60">
+        <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+          <ShieldCheck className="w-4 h-4 shrink-0" />
+          <span>Phone storage safe • 0 cloud charges</span>
         </span>
-        <span className="text-zinc-500">Stored in Pooja&apos;s Drive</span>
+        <span className="text-zinc-500 font-mono text-[10px]">
+          {isAuthenticated ? 'Connected to Drive' : 'Sync ready'}
+        </span>
       </div>
     </div>
   );

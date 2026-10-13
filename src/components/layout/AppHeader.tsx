@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Cloud, UploadCloud, Sun, Moon, Laptop } from 'lucide-react';
+import { Cloud, UploadCloud, Sun, Moon, Sparkles, Settings } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useUpload } from '../../context/UploadContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -11,59 +11,48 @@ interface AppHeaderProps {
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
-  const { isAuthenticated, userProfile, isConfigured } = useAuth();
+  const { isAuthenticated, userProfile, signIn } = useAuth();
   const { isUploading, totalProgress, setQueueModalOpen, queue } = useUpload();
   const { theme, toggleTheme } = useTheme();
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
-  };
 
   const activeCount = queue.filter(
     (i) => i.status === 'uploading' || i.status === 'queued'
   ).length;
 
   return (
-    <header className="sticky top-0 z-30 bg-[#09090B]/90 backdrop-blur-xl border-b border-zinc-800/80 px-4 py-3 safe-top transition-all">
+    <header className="sticky top-0 z-30 bg-[#09090E]/85 backdrop-blur-2xl border-b border-zinc-800/80 px-4 py-2.5 safe-top transition-colors">
       <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
         {/* Left: Avatar & Personal Title */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onOpenMenu}
-            aria-label="Open personal profile menu"
-            className="relative group p-0.5 rounded-full border-2 border-amber-400/80 hover:border-amber-300 transition-all focus:outline-none focus:ring-2 focus:ring-amber-400"
-          >
+        <div className="flex items-center gap-2.5">
+          <div className="relative p-0.5 rounded-full border-2 border-amber-400/80 shrink-0">
             <img
               src={userProfile?.picture || POOJA_HERO_IMAGE}
               alt="Pooja"
-              className="w-10 h-10 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform"
+              className="w-9 h-9 rounded-full object-cover shadow-sm"
             />
-            <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#09090B] rounded-full" />
-          </button>
+            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#09090E] rounded-full" />
+          </div>
 
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-sm font-extrabold tracking-wider text-white uppercase font-sans">
+              <span className="text-sm font-black tracking-wider text-white uppercase font-sans">
                 Poojaspace
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <Sparkles className="w-3 h-3 text-amber-400 fill-amber-400" />
             </div>
-            <p className="text-[11px] text-zinc-400 font-normal">
-              {getGreeting()}, <span className="font-semibold text-amber-400">Pooja didi</span>
+            <p className="text-[11px] text-zinc-400">
+              For <strong className="text-amber-400 font-semibold">Pooja Didi</strong>
             </p>
           </div>
         </div>
 
-        {/* Right: Theme Toggle & Cloud Status & Menu */}
+        {/* Right: Upload Status, Theme Switcher & Essential Actions */}
         <div className="flex items-center gap-2">
           {/* Active upload floating chip */}
           {isUploading && (
             <button
               onClick={() => setQueueModalOpen(true)}
-              className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-gold-glow animate-pulse-gold active:scale-95 transition-all"
+              className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-black text-xs font-extrabold px-3 py-1.5 rounded-full shadow-gold-glow animate-pulse-gold active:scale-95 transition-all"
             >
               <UploadCloud className="w-3.5 h-3.5 animate-bounce stroke-[2.5]" />
               <span>{totalProgress}%</span>
@@ -71,52 +60,59 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
             </button>
           )}
 
-          {/* Theme Toggle (Dark / Light / Auto) */}
+          {/* Theme Toggle Button (Light / Dark / Auto) */}
           <button
             onClick={toggleTheme}
             aria-label={`Switch theme (current: ${theme})`}
-            title={`Theme: ${theme.toUpperCase()} (tap to change)`}
-            className="p-2 text-zinc-300 hover:text-amber-400 hover:bg-zinc-900 border border-zinc-800 rounded-xl transition-all flex items-center justify-center min-touch-target"
+            title={`Theme: ${theme.toUpperCase()} (Tap to change)`}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-zinc-900/80 border border-zinc-800 text-zinc-300 hover:text-amber-400 hover:border-amber-400/50 active:scale-95 transition-all min-touch-target"
           >
             {theme === 'light' ? (
-              <Sun className="w-4 h-4 text-amber-400" />
+              <>
+                <Sun className="w-4 h-4 text-amber-500" />
+                <span className="text-[10px] font-bold text-amber-500 uppercase hidden sm:inline">Light</span>
+              </>
             ) : theme === 'dark' ? (
-              <Moon className="w-4 h-4 text-amber-300" />
+              <>
+                <Moon className="w-4 h-4 text-amber-300" />
+                <span className="text-[10px] font-bold text-amber-300 uppercase hidden sm:inline">Dark</span>
+              </>
             ) : (
-              <Laptop className="w-4 h-4 text-zinc-300" />
+              <>
+                <Sparkles className="w-4 h-4 text-zinc-400" />
+                <span className="text-[10px] font-bold text-zinc-400 uppercase hidden sm:inline">Auto</span>
+              </>
             )}
           </button>
 
-          {/* Cloud connection indicator */}
-          <button
-            onClick={onOpenMenu}
-            className="hidden sm:flex items-center gap-2 text-xs px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-300 shadow-sm transition-all"
-          >
-            <Cloud
-              className={`w-3.5 h-3.5 ${
-                isAuthenticated ? 'text-emerald-400' : 'text-amber-400'
-              }`}
-            />
-            <span className="truncate max-w-[130px] font-medium">
-              {isAuthenticated
-                ? userProfile?.email || 'Google Drive'
-                : isConfigured
-                ? 'Connect Drive'
-                : 'Demo Vault'}
-            </span>
-          </button>
+          {/* Cloud connection button / status */}
+          {!isAuthenticated ? (
+            <button
+              onClick={signIn}
+              className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-400/40 text-amber-400 hover:bg-amber-500/25 active:scale-95 transition-all min-touch-target shadow-sm"
+            >
+              <Cloud className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span className="hidden xs:inline">Connect</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 font-semibold">
+              <Cloud className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="hidden sm:inline text-[11px] truncate max-w-[100px]">
+                {userProfile?.name?.split(' ')[0] || 'Connected'}
+              </span>
+            </div>
+          )}
 
-          {/* Menu Drawer Toggle */}
+          {/* Settings / Menu */}
           <button
             onClick={onOpenMenu}
-            aria-label="Open menu options"
-            className="p-2.5 text-zinc-300 hover:text-white hover:bg-zinc-900/80 border border-transparent hover:border-zinc-800 rounded-2xl transition-all min-touch-target flex items-center justify-center"
+            aria-label="Settings and options"
+            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent hover:border-zinc-800 rounded-xl transition-all min-touch-target flex items-center justify-center"
           >
-            <Menu className="w-5 h-5" />
+            <Settings className="w-4.5 h-4.5" />
           </button>
         </div>
       </div>
     </header>
   );
 };
-

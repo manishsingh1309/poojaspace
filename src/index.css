@@ -3,39 +3,80 @@
 @tailwind utilities;
 
 :root {
-  --color-obsidian-void: #09090B;
-  --color-obsidian-card: #121216;
+  --color-obsidian-void: #09090E;
+  --color-obsidian-card: #12131A;
   --color-gold-primary: #F59E0B;
   --color-gold-hover: #D97706;
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-top: env(safe-area-inset-top, 0px);
 }
 
-/* Light Theme Variables & Overrides */
+/* Light Theme luxury variables & overrides */
 html.theme-light {
-  --color-obsidian-void: #FAF8F5;
+  --color-obsidian-void: #FAF7F2;
   --color-obsidian-card: #FFFFFF;
 }
 
 html.theme-light body {
-  background-color: #FAF8F5 !important;
-  color: #18181B !important;
+  background-color: #FAF7F2 !important;
+  color: #1C1917 !important;
+  background-image: 
+    radial-gradient(circle at 15% 10%, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(251, 113, 133, 0.06) 0%, transparent 35%),
+    radial-gradient(circle at 50% 85%, rgba(217, 119, 6, 0.05) 0%, transparent 45%) !important;
 }
 
 html.theme-light .glass-dock {
   background: rgba(255, 255, 255, 0.88) !important;
-  border-color: rgba(220, 213, 199, 0.8) !important;
-  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.12) !important;
+  border-color: rgba(229, 221, 208, 0.8) !important;
+  box-shadow: 0 16px 40px -4px rgba(120, 90, 40, 0.12) !important;
 }
 
-html.theme-light .titanium-card {
+html.theme-light .titanium-card,
+html.theme-light .luxury-glass-card {
   background: #FFFFFF !important;
-  border-color: #EAE5DB !important;
+  border-color: #EDE8DF !important;
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.04), 0 2px 10px -2px rgba(245, 158, 11, 0.06) !important;
 }
 
 html.theme-light .glass-panel {
-  background: rgba(255, 255, 255, 0.92) !important;
-  border-color: rgba(220, 213, 199, 0.6) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(229, 221, 208, 0.7) !important;
+}
+
+html.theme-light header {
+  background-color: rgba(250, 247, 242, 0.92) !important;
+  border-bottom-color: rgba(229, 221, 208, 0.7) !important;
+}
+
+html.theme-light .text-white {
+  color: #1C1917 !important;
+}
+
+html.theme-light .text-zinc-300,
+html.theme-light .text-zinc-400 {
+  color: #57534E !important;
+}
+
+html.theme-light .text-zinc-500 {
+  color: #8C857B !important;
+}
+
+html.theme-light .bg-zinc-900,
+html.theme-light .bg-zinc-900\/60,
+html.theme-light .bg-zinc-900\/80,
+html.theme-light .bg-zinc-800,
+html.theme-light .bg-zinc-800\/80 {
+  background-color: #F5EFEB !important;
+}
+
+html.theme-light .border-zinc-800,
+html.theme-light .border-zinc-800\/80,
+html.theme-light .border-zinc-800\/50,
+html.theme-light .border-zinc-700,
+html.theme-light .border-zinc-700\/70,
+html.theme-light .border-zinc-700\/40 {
+  border-color: #E7DFD5 !important;
 }
 
 /* Base phone optimizations */
@@ -43,13 +84,18 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #09090B;
+  background-color: #09090E;
   color: #F4F4F5;
+  background-image: 
+    radial-gradient(circle at 10% 15%, rgba(245, 158, 11, 0.07) 0%, transparent 40%),
+    radial-gradient(circle at 90% 12%, rgba(244, 63, 94, 0.05) 0%, transparent 35%),
+    radial-gradient(circle at 50% 85%, rgba(139, 92, 246, 0.04) 0%, transparent 45%);
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: contain;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.35s ease, color 0.3s ease;
 }
 
 /* Safe area padding utilities for Oppo & Android gesture navigation */
@@ -61,13 +107,13 @@ html, body {
   padding-top: max(env(safe-area-inset-top), 12px);
 }
 
-/* Touch target guarantee for mobile */
+/* Touch target guarantee for mobile ergonomics */
 .min-touch-target {
   min-height: 44px;
   min-width: 44px;
 }
 
-/* Dark Titanium & Obsidian Custom Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -87,15 +133,24 @@ html, body {
 }
 
 /* Glassmorphism & Luxury Surfaces */
+.luxury-glass-card {
+  background: rgba(18, 19, 26, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.6);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .glass-panel {
-  background: rgba(18, 18, 22, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(18, 19, 26, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-dock {
-  background: rgba(12, 12, 15, 0.9);
+  background: rgba(12, 13, 18, 0.92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -107,33 +162,33 @@ html, body {
   background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 45%, #D97706 100%);
   color: #000000;
   font-weight: 700;
-  box-shadow: 0 4px 20px -2px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 4px 20px -2px rgba(245, 158, 11, 0.38);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gold-button:hover {
-  box-shadow: 0 6px 26px -2px rgba(245, 158, 11, 0.55);
+  box-shadow: 0 6px 26px -2px rgba(245, 158, 11, 0.58);
   transform: translateY(-1px);
 }
 
 .gold-button:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
   box-shadow: 0 2px 10px -2px rgba(245, 158, 11, 0.25);
 }
 
 /* Subtle Titanium card */
 .titanium-card {
-  background: #121216;
-  border: 1px solid #272733;
+  background: #12131A;
+  border: 1px solid #232530;
   transition: all 0.25s ease;
 }
 
 .titanium-card:hover {
-  border-color: rgba(245, 158, 11, 0.35);
-  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.7), 0 0 15px -3px rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.7), 0 0 15px -3px rgba(245, 158, 11, 0.18);
 }
 
-/* Smooth fade & spring animations */
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
@@ -141,23 +196,32 @@ html, body {
 
 @keyframes pulseGold {
   0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-  50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+  50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
 }
 
 @keyframes waveHand {
   0% { transform: rotate(0deg); }
-  15% { transform: rotate(14deg); }
-  30% { transform: rotate(-12deg); }
-  45% { transform: rotate(14deg); }
-  60% { transform: rotate(-6deg); }
-  75% { transform: rotate(10deg); }
+  15% { transform: rotate(16deg); }
+  30% { transform: rotate(-14deg); }
+  45% { transform: rotate(16deg); }
+  60% { transform: rotate(-8deg); }
+  75% { transform: rotate(12deg); }
   100% { transform: rotate(0deg); }
+}
+
+@keyframes softFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 
 .animate-wave {
   display: inline-block;
   transform-origin: 70% 70%;
   animation: waveHand 2.2s infinite ease-in-out;
+}
+
+.animate-soft-float {
+  animation: softFloat 3s infinite ease-in-out;
 }
 
 .animate-fade-in {

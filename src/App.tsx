@@ -173,10 +173,10 @@ export const App: React.FC = () => {
         <div className="space-y-4 animate-fade-in">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-obsidian-text-primary tracking-tight">
-                Photos &amp; Moments
+              <h2 className="text-lg font-extrabold text-white tracking-tight">
+                Photos &amp; Memories
               </h2>
-              <p className="text-xs text-obsidian-text-muted">Your visual memories in one place</p>
+              <p className="text-xs text-zinc-400">All your captured moments in one place</p>
             </div>
             <button
               onClick={() => openQuickAddForFolder(knownFolders?.photosId, 'Photos')}
@@ -330,8 +330,8 @@ export const App: React.FC = () => {
       {activeView === 'favourites' && (
         <div className="space-y-4 animate-fade-in">
           <div>
-            <h2 className="text-lg font-bold text-obsidian-text-primary tracking-tight">Favourites</h2>
-            <p className="text-xs text-obsidian-text-muted">Memories you marked with a star</p>
+            <h2 className="text-lg font-extrabold text-white tracking-tight">Saved Memories</h2>
+            <p className="text-xs text-zinc-400">Moments you marked with a heart</p>
           </div>
 
           {filteredFiles.length === 0 ? (

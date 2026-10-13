@@ -140,6 +140,14 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const refreshFiles = async () => {
     if (isAuthenticated && token && knownFolders) {
+      // Refresh live quota as well
+      try {
+        const quota = await driveApiClient.getAboutQuota(token);
+        setAccountQuota(quota);
+      } catch (err) {
+        console.warn('Could not refresh quota:', err);
+      }
+
       const parentIds = [
         knownFolders.photosId,
         knownFolders.videosId,
@@ -364,31 +372,44 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Compute stats
   let totalBytes = 0;
   let photoCount = 0;
+  let photoBytes = 0;
   let videoCount = 0;
+  let videoBytes = 0;
   let documentCount = 0;
+  let documentBytes = 0;
   let otherCount = 0;
 
   files.forEach((f) => {
     const s = Number(f.size) || 0;
     totalBytes += s;
-    if (f.mimeType.startsWith('image/')) photoCount++;
-    else if (f.mimeType.startsWith('video/')) videoCount++;
-    else if (
+    if (f.mimeType.startsWith('image/')) {
+      photoCount++;
+      photoBytes += s;
+    } else if (f.mimeType.startsWith('video/')) {
+      videoCount++;
+      videoBytes += s;
+    } else if (
       f.mimeType.includes('pdf') ||
       f.mimeType.includes('document') ||
       f.mimeType.includes('text') ||
       f.mimeType.includes('sheet')
-    )
+    ) {
       documentCount++;
-    else otherCount++;
+      documentBytes += s;
+    } else {
+      otherCount++;
+    }
   });
 
   const stats: DriveStorageStats = {
     totalBytes,
     fileCount: files.length,
     photoCount,
+    photoBytes,
     videoCount,
+    videoBytes,
     documentCount,
+    documentBytes,
     otherCount,
     albumCount: knownFolders?.customAlbums.length || 0,
     recentlyDeletedCount: trashedFiles.length,

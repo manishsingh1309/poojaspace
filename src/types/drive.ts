@@ -44,8 +44,11 @@ export interface DriveStorageStats {
   totalBytes: number;
   fileCount: number;
   photoCount: number;
+  photoBytes: number;
   videoCount: number;
+  videoBytes: number;
   documentCount: number;
+  documentBytes: number;
   otherCount: number;
   albumCount: number;
   recentlyDeletedCount: number;

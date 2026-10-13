@@ -25,7 +25,7 @@ export const Layout: React.FC<LayoutProps> = ({
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg-[#09090B] text-zinc-100 flex flex-col font-sans selection:bg-amber-400 selection:text-black">
+    <div className="min-h-screen bg-transparent text-zinc-100 flex flex-col font-sans selection:bg-amber-400 selection:text-black">
       {/* Top Header */}
       <AppHeader
         onOpenMenu={() => setIsMenuOpen(true)}

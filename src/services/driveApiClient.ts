@@ -355,8 +355,11 @@ export class DriveApiClient {
         totalBytes: 0,
         fileCount: 0,
         photoCount: 0,
+        photoBytes: 0,
         videoCount: 0,
+        videoBytes: 0,
         documentCount: 0,
+        documentBytes: 0,
         otherCount: 0,
         albumCount: knownFolders.customAlbums.length,
         recentlyDeletedCount: 0,
@@ -370,8 +373,11 @@ export class DriveApiClient {
 
     let totalBytes = 0;
     let photoCount = 0;
+    let photoBytes = 0;
     let videoCount = 0;
+    let videoBytes = 0;
     let documentCount = 0;
+    let documentBytes = 0;
     let otherCount = 0;
 
     files.forEach((file) => {
@@ -380,8 +386,10 @@ export class DriveApiClient {
 
       if (file.mimeType.startsWith('image/')) {
         photoCount++;
+        photoBytes += size;
       } else if (file.mimeType.startsWith('video/')) {
         videoCount++;
+        videoBytes += size;
       } else if (
         file.mimeType.includes('pdf') ||
         file.mimeType.includes('document') ||
@@ -389,6 +397,7 @@ export class DriveApiClient {
         file.mimeType.includes('sheet')
       ) {
         documentCount++;
+        documentBytes += size;
       } else {
         otherCount++;
       }
@@ -408,8 +417,11 @@ export class DriveApiClient {
       totalBytes,
       fileCount: files.length,
       photoCount,
+      photoBytes,
       videoCount,
+      videoBytes,
       documentCount,
+      documentBytes,
       otherCount,
       albumCount: knownFolders.customAlbums.length,
       recentlyDeletedCount,
