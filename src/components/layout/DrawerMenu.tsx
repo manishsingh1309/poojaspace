@@ -44,15 +44,15 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
     icon: React.ComponentType<{ className?: string }>;
     badge?: number | string;
   }> = [
-    { id: 'home', label: 'Home Sanctuary', icon: Home },
-    { id: 'photos', label: 'Photos & Moments', icon: ImageIcon, badge: stats.photoCount },
-    { id: 'videos', label: 'Cinema & Clips', icon: Video, badge: stats.videoCount },
-    { id: 'documents', label: 'Documents & Vault', icon: FileText, badge: stats.documentCount },
-    { id: 'albums', label: 'Curated Albums', icon: FolderHeart, badge: stats.albumCount },
-    { id: 'favourites', label: 'Starred Favourites', icon: Star },
+    { id: 'home', label: 'Home', icon: Home },
+    { id: 'photos', label: 'Photos', icon: ImageIcon, badge: stats.photoCount },
+    { id: 'videos', label: 'Videos', icon: Video, badge: stats.videoCount },
+    { id: 'documents', label: 'Documents', icon: FileText, badge: stats.documentCount },
+    { id: 'albums', label: 'Albums', icon: FolderHeart, badge: stats.albumCount },
+    { id: 'favourites', label: 'Saved Moments', icon: Star },
     { id: 'trash', label: 'Recently Deleted', icon: Trash2, badge: stats.recentlyDeletedCount },
-    { id: 'settings', label: 'Settings & Quota', icon: Settings },
-    { id: 'privacy', label: 'Privacy & Sovereignty', icon: ShieldCheck },
+    { id: 'settings', label: 'Storage & Settings', icon: Settings },
+    { id: 'privacy', label: 'Privacy & Security', icon: ShieldCheck },
   ];
 
   const formatBytes = (bytes: number) => {

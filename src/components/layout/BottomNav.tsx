@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Image as ImageIcon, Plus, Heart, HardDrive } from 'lucide-react';
+import { Home, Image as ImageIcon, Plus, FileText, FolderHeart } from 'lucide-react';
 import { ActiveView } from '../../types/navigation';
 
 interface BottomNavProps {
@@ -14,79 +14,107 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   onOpenQuickAdd,
 }) => {
   return (
-    <nav className="fixed bottom-3 left-0 right-0 z-40 px-4 pointer-events-none safe-bottom">
-      <div className="pointer-events-auto max-w-sm mx-auto glass-dock rounded-full px-4 py-1.5 flex items-center justify-between shadow-2xl relative">
-        {/* Left Item 1: Home */}
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-40 bg-[#0A0B10]/95 backdrop-blur-2xl border-t border-zinc-800/80 transition-colors"
+      style={{
+        transform: 'translateZ(0)',
+        paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 10px)',
+      }}
+    >
+      <div className="max-w-md mx-auto px-3 pt-2 pb-1 flex items-center justify-between relative">
+        {/* 1. Home */}
         <button
           onClick={() => onChangeView('home')}
-          className={`flex flex-col items-center justify-center min-touch-target px-2.5 py-1 rounded-full transition-all ${
+          className={`flex-1 flex flex-col items-center justify-center py-1 transition-all min-touch-target ${
             activeView === 'home'
               ? 'text-amber-400 font-extrabold'
               : 'text-zinc-400 hover:text-zinc-200 active:scale-95'
           }`}
+          aria-label="Home Sanctuary"
         >
-          <Sparkles className={`w-5 h-5 transition-transform ${activeView === 'home' ? 'scale-110 text-amber-400' : ''}`} />
-          <span className="text-[10px] mt-0.5 tracking-tight leading-none">Home</span>
+          <Home
+            className={`w-5 h-5 transition-transform ${
+              activeView === 'home' ? 'scale-110 text-amber-400 stroke-[2.5]' : 'stroke-[1.8]'
+            }`}
+          />
+          <span className="text-[10px] mt-1 font-semibold tracking-tight leading-none">Home</span>
           {activeView === 'home' && (
             <span className="w-1 h-1 rounded-full bg-amber-400 mt-0.5 shadow-gold-glow" />
           )}
         </button>
 
-        {/* Left Item 2: Photos Gallery */}
+        {/* 2. Photos */}
         <button
           onClick={() => onChangeView('photos')}
-          className={`flex flex-col items-center justify-center min-touch-target px-2.5 py-1 rounded-full transition-all ${
+          className={`flex-1 flex flex-col items-center justify-center py-1 transition-all min-touch-target ${
             activeView === 'photos'
               ? 'text-amber-400 font-extrabold'
               : 'text-zinc-400 hover:text-zinc-200 active:scale-95'
           }`}
+          aria-label="Photos Gallery"
         >
-          <ImageIcon className={`w-5 h-5 transition-transform ${activeView === 'photos' ? 'scale-110 text-amber-400' : ''}`} />
-          <span className="text-[10px] mt-0.5 tracking-tight leading-none">Photos</span>
+          <ImageIcon
+            className={`w-5 h-5 transition-transform ${
+              activeView === 'photos' ? 'scale-110 text-amber-400 stroke-[2.5]' : 'stroke-[1.8]'
+            }`}
+          />
+          <span className="text-[10px] mt-1 font-semibold tracking-tight leading-none">Photos</span>
           {activeView === 'photos' && (
             <span className="w-1 h-1 rounded-full bg-amber-400 mt-0.5 shadow-gold-glow" />
           )}
         </button>
 
-        {/* Central Sculpted Golden Upload Button */}
-        <div className="relative -top-3 px-1">
+        {/* 3. Center Sculpted Gold Upload Button (+) */}
+        <div className="flex-1 flex items-center justify-center relative -top-3">
           <button
             onClick={onOpenQuickAdd}
-            aria-label="Upload photo or video to Google Drive"
-            className="flex items-center justify-center w-13 h-13 rounded-full gold-button border-3 border-[#09090E] shadow-gold-glow active:scale-90 transition-transform focus:outline-none"
+            aria-label="Upload Photos, Videos or Documents"
+            className="flex items-center justify-center w-13 h-13 rounded-full gold-button border-3 border-[#0A0B10] shadow-gold-glow active:scale-90 transition-transform focus:outline-none"
           >
             <Plus className="w-6 h-6 stroke-[3] text-black" />
           </button>
         </div>
 
-        {/* Right Item 1: Saved / Favourites */}
+        {/* 4. Docs */}
         <button
-          onClick={() => onChangeView('favourites')}
-          className={`flex flex-col items-center justify-center min-touch-target px-2.5 py-1 rounded-full transition-all ${
-            activeView === 'favourites'
+          onClick={() => onChangeView('documents')}
+          className={`flex-1 flex flex-col items-center justify-center py-1 transition-all min-touch-target ${
+            activeView === 'documents'
               ? 'text-amber-400 font-extrabold'
               : 'text-zinc-400 hover:text-zinc-200 active:scale-95'
           }`}
+          aria-label="Documents Vault"
         >
-          <Heart className={`w-5 h-5 transition-transform ${activeView === 'favourites' ? 'scale-110 text-amber-400 fill-amber-400' : ''}`} />
-          <span className="text-[10px] mt-0.5 tracking-tight leading-none">Saved</span>
-          {activeView === 'favourites' && (
+          <FileText
+            className={`w-5 h-5 transition-transform ${
+              activeView === 'documents' ? 'scale-110 text-amber-400 stroke-[2.5]' : 'stroke-[1.8]'
+            }`}
+          />
+          <span className="text-[10px] mt-1 font-semibold tracking-tight leading-none">Docs</span>
+          {activeView === 'documents' && (
             <span className="w-1 h-1 rounded-full bg-amber-400 mt-0.5 shadow-gold-glow" />
           )}
         </button>
 
-        {/* Right Item 2: Storage & Settings */}
+        {/* 5. Albums */}
         <button
-          onClick={() => onChangeView('settings')}
-          className={`flex flex-col items-center justify-center min-touch-target px-2.5 py-1 rounded-full transition-all ${
-            activeView === 'settings'
+          onClick={() => onChangeView('albums')}
+          className={`flex-1 flex flex-col items-center justify-center py-1 transition-all min-touch-target ${
+            activeView === 'albums' || activeView === 'album_detail'
               ? 'text-amber-400 font-extrabold'
               : 'text-zinc-400 hover:text-zinc-200 active:scale-95'
           }`}
+          aria-label="Photo Albums"
         >
-          <HardDrive className={`w-5 h-5 transition-transform ${activeView === 'settings' ? 'scale-110 text-amber-400' : ''}`} />
-          <span className="text-[10px] mt-0.5 tracking-tight leading-none">Vault</span>
-          {activeView === 'settings' && (
+          <FolderHeart
+            className={`w-5 h-5 transition-transform ${
+              activeView === 'albums' || activeView === 'album_detail'
+                ? 'scale-110 text-amber-400 stroke-[2.5]'
+                : 'stroke-[1.8]'
+            }`}
+          />
+          <span className="text-[10px] mt-1 font-semibold tracking-tight leading-none">Albums</span>
+          {(activeView === 'albums' || activeView === 'album_detail') && (
             <span className="w-1 h-1 rounded-full bg-amber-400 mt-0.5 shadow-gold-glow" />
           )}
         </button>

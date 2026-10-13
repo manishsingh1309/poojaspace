@@ -4,6 +4,7 @@ import { HeroBanner } from './components/home/HeroBanner';
 import { WelcomeWaveGuide } from './components/home/WelcomeWaveGuide';
 import { LiveStorageMeter } from './components/home/LiveStorageMeter';
 import { RecentMemories } from './components/home/RecentMemories';
+import { PersonalNote } from './components/home/PersonalNote';
 import { FilterSearchBar } from './components/library/FilterSearchBar';
 import { PhotoGallery } from './components/library/PhotoGallery';
 import { DocumentList } from './components/library/DocumentList';
@@ -57,9 +58,17 @@ export const App: React.FC = () => {
 
     // Category filter
     if (selectedCategory === 'photos' || activeView === 'photos') {
-      result = result.filter((f) => f.mimeType.startsWith('image/'));
+      result = result.filter(
+        (f) =>
+          f.mimeType.startsWith('image/') ||
+          /\.(jpe?g|png|gif|webp|heic|svg|bmp)$/i.test(f.name)
+      );
     } else if (selectedCategory === 'videos' || activeView === 'videos') {
-      result = result.filter((f) => f.mimeType.startsWith('video/'));
+      result = result.filter(
+        (f) =>
+          f.mimeType.startsWith('video/') ||
+          /\.(mp4|mov|mkv|webm|avi|3gp)$/i.test(f.name)
+      );
     } else if (selectedCategory === 'documents' || activeView === 'documents') {
       result = result.filter(
         (f) =>
@@ -67,7 +76,8 @@ export const App: React.FC = () => {
           f.mimeType.includes('document') ||
           f.mimeType.includes('text') ||
           f.mimeType.includes('sheet') ||
-          f.mimeType.includes('msword')
+          f.mimeType.includes('msword') ||
+          /\.(pdf|docx?|xlsx?|pptx?|txt|md|csv)$/i.test(f.name)
       );
     } else if (selectedCategory === 'audio_other') {
       result = result.filter(
@@ -164,7 +174,11 @@ export const App: React.FC = () => {
           <RecentMemories
             onViewAllPhotos={() => setActiveView('photos')}
             onSelectFile={handleSelectFile}
+            onAddPhotos={() => openQuickAddForFolder(knownFolders?.photosId, 'Photos')}
           />
+
+          {/* Cherished Photo & Dedication: Made with love for Pooja didi */}
+          <PersonalNote />
         </div>
       )}
 

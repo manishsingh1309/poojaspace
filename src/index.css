@@ -26,10 +26,18 @@ html.theme-light body {
     radial-gradient(circle at 50% 85%, rgba(217, 119, 6, 0.05) 0%, transparent 45%) !important;
 }
 
-html.theme-light .glass-dock {
-  background: rgba(255, 255, 255, 0.88) !important;
-  border-color: rgba(229, 221, 208, 0.8) !important;
-  box-shadow: 0 16px 40px -4px rgba(120, 90, 40, 0.12) !important;
+html.theme-light nav {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-top-color: #E7DFD5 !important;
+  box-shadow: 0 -4px 24px -2px rgba(180, 130, 40, 0.08) !important;
+}
+
+html.theme-light nav .text-zinc-400 {
+  color: #78716C !important;
+}
+
+html.theme-light nav .text-zinc-400:hover {
+  color: #1C1917 !important;
 }
 
 html.theme-light .titanium-card,
@@ -45,8 +53,8 @@ html.theme-light .glass-panel {
 }
 
 html.theme-light header {
-  background-color: rgba(250, 247, 242, 0.92) !important;
-  border-bottom-color: rgba(229, 221, 208, 0.7) !important;
+  background-color: rgba(250, 247, 242, 0.95) !important;
+  border-bottom-color: rgba(229, 221, 208, 0.8) !important;
 }
 
 html.theme-light .text-white {
@@ -64,14 +72,20 @@ html.theme-light .text-zinc-500 {
 
 html.theme-light .bg-zinc-900,
 html.theme-light .bg-zinc-900\/60,
+html.theme-light .bg-zinc-900\/70,
 html.theme-light .bg-zinc-900\/80,
+html.theme-light .bg-zinc-900\/90,
 html.theme-light .bg-zinc-800,
-html.theme-light .bg-zinc-800\/80 {
-  background-color: #F5EFEB !important;
+html.theme-light .bg-zinc-800\/80,
+html.theme-light .bg-zinc-800\/60,
+html.theme-light .bg-\[\#16161D\],
+html.theme-light .bg-\[\#121216\] {
+  background-color: #F7F2EC !important;
 }
 
 html.theme-light .border-zinc-800,
 html.theme-light .border-zinc-800\/80,
+html.theme-light .border-zinc-800\/60,
 html.theme-light .border-zinc-800\/50,
 html.theme-light .border-zinc-700,
 html.theme-light .border-zinc-700\/70,
@@ -79,10 +93,13 @@ html.theme-light .border-zinc-700\/40 {
   border-color: #E7DFD5 !important;
 }
 
-/* Base phone optimizations */
+/* Base phone optimizations - Optimized for Oppo F9 Pro & iOS/Android devices */
 html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
   font-family: 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #09090E;
   color: #F4F4F5;
@@ -90,17 +107,15 @@ html, body {
     radial-gradient(circle at 10% 15%, rgba(245, 158, 11, 0.07) 0%, transparent 40%),
     radial-gradient(circle at 90% 12%, rgba(244, 63, 94, 0.05) 0%, transparent 35%),
     radial-gradient(circle at 50% 85%, rgba(139, 92, 246, 0.04) 0%, transparent 45%);
-  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
-  overscroll-behavior-y: contain;
   transition: background-color 0.35s ease, color 0.3s ease;
 }
 
 /* Safe area padding utilities for Oppo & Android gesture navigation */
 .safe-bottom {
-  padding-bottom: max(env(safe-area-inset-bottom), 16px);
+  padding-bottom: max(env(safe-area-inset-bottom), 12px);
 }
 
 .safe-top {
@@ -147,14 +162,6 @@ html, body {
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-dock {
-  background: rgba(12, 13, 18, 0.92);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.85);
 }
 
 /* Gold Gradient Glow Button */

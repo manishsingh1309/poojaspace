@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, X, Image as ImageIcon, Video, Layers } from 'lucide-react';
+import { Search, X, Image as ImageIcon, Video, Layers, FileText } from 'lucide-react';
 import { FileCategory, SortOption } from '../../types/navigation';
 
 interface FilterSearchBarProps {
@@ -24,9 +24,10 @@ export const FilterSearchBar: React.FC<FilterSearchBarProps> = ({
   totalCount,
 }) => {
   const categories: Array<{ id: FileCategory; label: string; icon: React.ComponentType<{ className?: string }> }> = [
-    { id: 'all', label: 'All', icon: Layers },
+    { id: 'all', label: 'All Vault', icon: Layers },
     { id: 'photos', label: 'Photos', icon: ImageIcon },
     { id: 'videos', label: 'Videos', icon: Video },
+    { id: 'documents', label: 'Documents', icon: FileText },
   ];
 
   return (

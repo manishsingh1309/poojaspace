@@ -104,7 +104,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
           <button
             onClick={() =>
               handleOpenPicker(
-                'image/*,video/*',
+                'image/*',
                 knownFolders?.photosId,
                 'Photos'
               )
@@ -116,7 +116,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
             </div>
             <div>
               <span className="block text-sm font-bold text-white">
-                Photos &amp; Cinema
+                Photos
               </span>
               <span className="text-[11px] text-zinc-400">
                 Gallery, camera roll, high-res
@@ -127,7 +127,30 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
           <button
             onClick={() =>
               handleOpenPicker(
-                'application/pdf,application/*,text/*,.pdf,.doc,.docx,.xls,.xlsx',
+                'video/*',
+                knownFolders?.videosId,
+                'Videos'
+              )
+            }
+            className="flex items-center gap-3.5 p-4 rounded-2xl bg-[#16161D] border border-zinc-800 hover:border-amber-400/60 hover:bg-zinc-900 transition-all min-touch-target text-left group active:scale-[0.98]"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-purple-400/10 border border-purple-400/20 text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <UploadCloud className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="block text-sm font-bold text-white">
+                Videos
+              </span>
+              <span className="text-[11px] text-zinc-400">
+                Phone videos, recordings, clips
+              </span>
+            </div>
+          </button>
+
+          <button
+            onClick={() =>
+              handleOpenPicker(
+                'application/pdf,application/*,text/*,.pdf,.doc,.docx,.xls,.xlsx,.md',
                 knownFolders?.documentsId,
                 'Documents'
               )
@@ -142,24 +165,24 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                 Documents &amp; PDFs
               </span>
               <span className="text-[11px] text-zinc-400">
-                Certificates, receipts, bills
+                PDFs, notes, docs, receipts
               </span>
             </div>
           </button>
 
           <button
             onClick={() => handleOpenPicker('*/*')}
-            className="sm:col-span-2 flex items-center gap-3.5 p-4 rounded-2xl bg-[#16161D] border border-zinc-800 hover:border-amber-400/60 hover:bg-zinc-900 transition-all min-touch-target text-left group active:scale-[0.98]"
+            className="flex items-center gap-3.5 p-4 rounded-2xl bg-[#16161D] border border-zinc-800 hover:border-amber-400/60 hover:bg-zinc-900 transition-all min-touch-target text-left group active:scale-[0.98]"
           >
             <div className="w-12 h-12 rounded-2xl bg-zinc-800 border border-zinc-700 text-zinc-300 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
               <UploadCloud className="w-5 h-5 text-amber-400" />
             </div>
             <div>
               <span className="block text-sm font-bold text-white">
-                All Files &amp; Archives
+                All Files &amp; Vault
               </span>
               <span className="text-[11px] text-zinc-400">
-                Any media, audio, or document format
+                Any file or media format
               </span>
             </div>
           </button>

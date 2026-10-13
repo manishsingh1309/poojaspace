@@ -2,8 +2,6 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { DriveFile, KnownFolders, DriveStorageStats, DriveFolder, AccountStorageQuota } from '../types/drive';
 import { driveApiClient } from '../services/driveApiClient';
 import { useAuth } from './AuthContext';
-import { PERSONAL_MEMORY_PHOTOS } from '../assets/personalPhotos';
-
 interface DriveContextType {
   knownFolders: KnownFolders | null;
   files: DriveFile[];
@@ -26,25 +24,6 @@ interface DriveContextType {
 
 const DriveContext = createContext<DriveContextType | undefined>(undefined);
 
-// Initial mock files created from Pooja's personal photos in assets/
-const INITIAL_MOCK_FILES: DriveFile[] = PERSONAL_MEMORY_PHOTOS.map((mem, index) => ({
-  id: `mock_${mem.id}`,
-  name: `${mem.title}.jpg`,
-  mimeType: 'image/jpeg',
-  size: 1024 * 1024 * (1.2 + (index % 4) * 0.8), // ~1.2 - 3.6 MB
-  parents: ['mock_photos_folder'],
-  createdTime: new Date(Date.now() - index * 86400000 * 3).toISOString(),
-  modifiedTime: new Date(Date.now() - index * 86400000 * 3).toISOString(),
-  thumbnailLink: mem.src,
-  webContentLink: mem.src,
-  webViewLink: mem.src,
-  appProperties: {
-    favourite: index < 3 ? 'true' : 'false',
-    caption: mem.caption,
-  },
-  trashed: false,
-}));
-
 export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { token, isAuthenticated } = useAuth();
   const [knownFolders, setKnownFolders] = useState<KnownFolders | null>(null);
@@ -66,21 +45,18 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       audioOtherId: 'mock_other_folder',
       albumsRootId: 'mock_albums_root',
       recentlyDeletedId: 'mock_trash_folder',
-      customAlbums: [
-        { id: 'mock_album_family', name: 'Family & Festivals', parentId: 'mock_albums_root' },
-        { id: 'mock_album_portraits', name: 'Portraits of Pooja', parentId: 'mock_albums_root' },
-      ],
+      customAlbums: [],
     });
-    setFiles(INITIAL_MOCK_FILES);
+    setFiles([]);
     setTrashedFiles([]);
     setAccountQuota({
       limit: 16106127360, // 15 GB
-      usage: 26424115, // ~25.2 MB
-      usageInDrive: 26424115,
-      freeBytes: 16106127360 - 26424115,
-      percentUsed: 1,
-      userDisplayName: 'Pooja didi',
-      userEmail: 'pooja@gmail.com',
+      usage: 0,
+      usageInDrive: 0,
+      freeBytes: 16106127360,
+      percentUsed: 0,
+      userDisplayName: 'Pooja Didi',
+      userEmail: '',
     });
   }, []);
 
