@@ -13,10 +13,12 @@
 
 /* Base phone optimizations - Optimized for Oppo F9 Pro & iOS/Android devices */
 html {
+  scroll-behavior: smooth;
   scrollbar-gutter: stable;
+  -webkit-text-size-adjust: 100%;
 }
 
-html, body {
+body {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -25,23 +27,31 @@ html, body {
   font-family: 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #09090E;
   color: #F4F4F5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* GPU-composited fixed ambient background layer (never repaints during scroll) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image: 
     radial-gradient(circle at 10% 15%, rgba(245, 158, 11, 0.07) 0%, transparent 40%),
     radial-gradient(circle at 90% 12%, rgba(244, 63, 94, 0.05) 0%, transparent 35%),
     radial-gradient(circle at 50% 85%, rgba(139, 92, 246, 0.04) 0%, transparent 45%);
-  background-attachment: fixed;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-tap-highlight-color: transparent;
-  overscroll-behavior-y: none;
 }
 
-/* Bottom Navigation Bar fix to prevent jumping during touch scrolling */
+/* Bottom Navigation Bar rock-solid positioning */
 nav.fixed {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
 }
 
 /* Safe area padding utilities for Oppo & Android gesture navigation */

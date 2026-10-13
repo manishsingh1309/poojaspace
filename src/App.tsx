@@ -421,13 +421,13 @@ export const App: React.FC = () => {
 
       {/* Floating Upload Progress Indicator on Mobile */}
       {isUploading && (
-        <div className="fixed bottom-24 right-4 z-40 animate-fade-in">
+        <div className="fixed bottom-28 right-4 sm:bottom-24 z-30 animate-fade-in">
           <button
             onClick={() => setQueueModalOpen(true)}
-            className="flex items-center gap-2.5 bg-obsidian-card text-obsidian-text-primary px-4 py-2.5 rounded-full shadow-2xl border border-gold-500/30 active:scale-95 transition-all text-xs font-semibold backdrop-blur-md"
+            className="flex items-center gap-2.5 bg-[#12131A] text-white px-4 py-2.5 rounded-full shadow-2xl border border-amber-400/40 active:scale-95 transition-all text-xs font-semibold"
           >
-            <div className="w-2.5 h-2.5 rounded-full bg-gold-400 animate-ping" />
-            <span className="text-gold-400 font-bold">Uploading {totalProgress}%</span>
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
+            <span className="text-amber-400 font-bold">Uploading {totalProgress}%</span>
           </button>
         </div>
       )}

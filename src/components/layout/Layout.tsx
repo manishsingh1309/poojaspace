@@ -67,7 +67,7 @@ export const Layout: React.FC<LayoutProps> = ({
       )}
 
       {/* Main Page Area */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-4 pb-36">
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-4 pb-44 sm:pb-40">
         {children}
       </main>
 

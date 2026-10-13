@@ -15,10 +15,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({
 }) => {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 bg-[#0A0B10]/95 backdrop-blur-2xl border-t border-zinc-800/80 transition-colors"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-[#09090E] border-t border-zinc-800 shadow-[0_-12px_36px_rgba(0,0,0,0.95)] transition-colors"
       style={{
-        transform: 'translateZ(0)',
-        paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 10px)',
+        paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
       }}
     >
       <div className="max-w-md mx-auto px-3 pt-2 pb-1 flex items-center justify-between relative">
@@ -69,7 +68,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           <button
             onClick={onOpenQuickAdd}
             aria-label="Upload Photos, Videos or Documents"
-            className="flex items-center justify-center w-13 h-13 rounded-full gold-button border-3 border-[#0A0B10] shadow-gold-glow active:scale-90 transition-transform focus:outline-none"
+            className="flex items-center justify-center w-12 h-12 rounded-full gold-button border-4 border-[#09090E] shadow-gold-glow active:scale-90 transition-transform focus:outline-none"
           >
             <Plus className="w-6 h-6 stroke-[3] text-black" />
           </button>

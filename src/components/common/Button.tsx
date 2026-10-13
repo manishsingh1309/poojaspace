@@ -36,7 +36,7 @@ export const Button: React.FC<ButtonProps> = ({
     ghost:
       'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/80',
     danger:
-      'bg-red-500/15 border-2 border-red-500/50 text-red-200 hover:text-white hover:bg-red-500/25 active:bg-red-500/35 font-bold shadow-sm',
+      'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 active:from-red-700 text-white font-black border-2 border-red-500 shadow-lg shadow-red-950/80',
   };
 
   return (

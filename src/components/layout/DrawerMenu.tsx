@@ -173,9 +173,9 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
                 signOut();
                 onClose();
               }}
-              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-bold bg-red-500/15 border-2 border-red-500/50 text-red-200 hover:text-white hover:bg-red-500/25 active:scale-98 transition-all shadow-md min-touch-target"
+              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-2xl text-sm font-black bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 active:from-red-700 text-white border-2 border-red-500 shadow-xl shadow-red-950/80 active:scale-[0.98] transition-all min-touch-target"
             >
-              <LogOut className="w-4.5 h-4.5 text-red-400 stroke-[2.5]" />
+              <LogOut className="w-5 h-5 text-white stroke-[2.5]" />
               <span className="tracking-wide">Disconnect Google Drive</span>
             </button>
           ) : (
