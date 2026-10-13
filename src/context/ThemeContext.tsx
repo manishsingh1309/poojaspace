@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 
-export type ThemeMode = 'dark' | 'light' | 'auto';
+export type ThemeMode = 'dark';
 
 interface ThemeContextType {
-  theme: ThemeMode;
-  resolvedTheme: 'dark' | 'light';
+  theme: 'dark';
+  resolvedTheme: 'dark';
   setTheme: (theme: ThemeMode) => void;
   toggleTheme: () => void;
 }
@@ -12,61 +12,33 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<ThemeMode>(() => {
-    const saved = localStorage.getItem('poojaspace_theme') as ThemeMode | null;
-    return saved === 'light' || saved === 'dark' || saved === 'auto' ? saved : 'dark';
-  });
-
-  const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>('dark');
-
   useEffect(() => {
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    // Pure Dark Mode only: Remove any legacy light mode classes and localStorage overrides
+    try {
+      localStorage.removeItem('poojaspace_theme');
+    } catch {
+      // Ignore in restricted iframe / storage environments
+    }
 
-    const applyTheme = () => {
-      let active: 'dark' | 'light';
-      if (theme === 'auto') {
-        active = media.matches ? 'dark' : 'light';
-      } else {
-        active = theme;
-      }
+    const root = document.documentElement;
+    root.classList.remove('light', 'theme-light');
+    root.classList.add('dark');
 
-      setResolvedTheme(active);
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', '#09090E');
+    }
+  }, []);
 
-      const root = document.documentElement;
-      if (active === 'light') {
-        root.classList.remove('dark');
-        root.classList.add('light', 'theme-light');
-        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#FAF8F5');
-      } else {
-        root.classList.remove('light', 'theme-light');
-        root.classList.add('dark');
-        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#09090B');
-      }
-    };
-
-    applyTheme();
-
-    const listener = () => {
-      if (theme === 'auto') applyTheme();
-    };
-
-    media.addEventListener('change', listener);
-    return () => media.removeEventListener('change', listener);
-  }, [theme]);
-
-  const setTheme = (newTheme: ThemeMode) => {
-    setThemeState(newTheme);
-    localStorage.setItem('poojaspace_theme', newTheme);
-  };
-
-  const toggleTheme = () => {
-    if (theme === 'dark') setTheme('light');
-    else if (theme === 'light') setTheme('auto');
-    else setTheme('dark');
+  const value: ThemeContextType = {
+    theme: 'dark',
+    resolvedTheme: 'dark',
+    setTheme: () => {},
+    toggleTheme: () => {},
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
@@ -77,3 +49,4 @@ export const useTheme = (): ThemeContextType => {
   if (!ctx) throw new Error('useTheme must be used within a ThemeProvider');
   return ctx;
 };
+

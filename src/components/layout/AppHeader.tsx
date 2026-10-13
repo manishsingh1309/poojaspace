@@ -1,8 +1,7 @@
 import React from 'react';
-import { Cloud, UploadCloud, Sun, Moon, Sparkles, Settings } from 'lucide-react';
+import { Cloud, UploadCloud, Sparkles, MoreVertical } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useUpload } from '../../context/UploadContext';
-import { useTheme } from '../../context/ThemeContext';
 import { POOJA_HERO_IMAGE } from '../../assets/personalPhotos';
 
 interface AppHeaderProps {
@@ -13,7 +12,6 @@ interface AppHeaderProps {
 export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
   const { isAuthenticated, userProfile, signIn } = useAuth();
   const { isUploading, totalProgress, setQueueModalOpen, queue } = useUpload();
-  const { theme, toggleTheme } = useTheme();
 
   const activeCount = queue.filter(
     (i) => i.status === 'uploading' || i.status === 'queued'
@@ -46,7 +44,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
           </div>
         </div>
 
-        {/* Right: Upload Status, Theme Switcher & Essential Actions */}
+        {/* Right: Upload Status, Connection & 3-Dots Menu */}
         <div className="flex items-center gap-2">
           {/* Active upload floating chip */}
           {isUploading && (
@@ -59,31 +57,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
               <span className="text-[10px] opacity-80">({activeCount})</span>
             </button>
           )}
-
-          {/* Theme Toggle Button (Light / Dark / Auto) */}
-          <button
-            onClick={toggleTheme}
-            aria-label={`Switch theme (current: ${theme})`}
-            title={`Theme: ${theme.toUpperCase()} (Tap to change)`}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-zinc-900/80 border border-zinc-800 text-zinc-300 hover:text-amber-400 hover:border-amber-400/50 active:scale-95 transition-all min-touch-target"
-          >
-            {theme === 'light' ? (
-              <>
-                <Sun className="w-4 h-4 text-amber-500" />
-                <span className="text-[10px] font-bold text-amber-500 uppercase hidden sm:inline">Light</span>
-              </>
-            ) : theme === 'dark' ? (
-              <>
-                <Moon className="w-4 h-4 text-amber-300" />
-                <span className="text-[10px] font-bold text-amber-300 uppercase hidden sm:inline">Dark</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 text-zinc-400" />
-                <span className="text-[10px] font-bold text-zinc-400 uppercase hidden sm:inline">Auto</span>
-              </>
-            )}
-          </button>
 
           {/* Cloud connection button / status */}
           {!isAuthenticated ? (
@@ -103,16 +76,18 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
             </div>
           )}
 
-          {/* Settings / Menu */}
+          {/* 3-dots Menu Button */}
           <button
             onClick={onOpenMenu}
-            aria-label="Settings and options"
-            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent hover:border-zinc-800 rounded-xl transition-all min-touch-target flex items-center justify-center"
+            aria-label="More options"
+            title="Menu & options"
+            className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 border border-transparent hover:border-zinc-800 rounded-xl transition-all min-touch-target flex items-center justify-center active:scale-95"
           >
-            <Settings className="w-4.5 h-4.5" />
+            <MoreVertical className="w-5 h-5 text-zinc-300 hover:text-amber-400 transition-colors" />
           </button>
         </div>
       </div>
     </header>
   );
 };
+

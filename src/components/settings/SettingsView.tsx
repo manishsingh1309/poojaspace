@@ -5,22 +5,18 @@ import {
   Smartphone,
   LogOut,
   LogIn,
-  Sun,
   Moon,
-  Laptop,
   CheckCircle2,
   Sparkles,
 } from 'lucide-react';
 import { Button } from '../common/Button';
 import { useAuth } from '../../context/AuthContext';
 import { useDrive } from '../../context/DriveContext';
-import { useTheme } from '../../context/ThemeContext';
 import { POOJA_HERO_IMAGE } from '../../assets/personalPhotos';
 
 export const SettingsView: React.FC = () => {
   const { isAuthenticated, userProfile, signIn, signOut, isConfigured } = useAuth();
   const { accountQuota } = useDrive();
-  const { theme, setTheme } = useTheme();
 
   const formatGb = (bytes: number) => {
     if (!bytes) return '15 GB';
@@ -104,52 +100,21 @@ export const SettingsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Theme Selection Card (Dark / Light / Auto) */}
+      {/* Appearance Status - Pure Obsidian Dark Mode */}
       <div className="luxury-glass-card p-5 rounded-3xl border border-zinc-800/80 shadow-xl space-y-3">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-amber-400" />
-          <h3 className="text-sm font-bold text-white tracking-tight">Display Appearance</h3>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2">
-          {/* Dark Mode */}
-          <button
-            onClick={() => setTheme('dark')}
-            className={`p-3 rounded-2xl border text-center transition-all active:scale-95 ${
-              theme === 'dark'
-                ? 'bg-amber-400/15 border-amber-400 text-amber-400 font-bold shadow-gold-glow-sm'
-                : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Moon className="w-5 h-5 mx-auto mb-1 text-amber-300" />
-            <span className="text-xs block">Dark</span>
-          </button>
-
-          {/* Light Mode */}
-          <button
-            onClick={() => setTheme('light')}
-            className={`p-3 rounded-2xl border text-center transition-all active:scale-95 ${
-              theme === 'light'
-                ? 'bg-amber-400/15 border-amber-400 text-amber-400 font-bold shadow-gold-glow-sm'
-                : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Sun className="w-5 h-5 mx-auto mb-1 text-amber-500" />
-            <span className="text-xs block">Light</span>
-          </button>
-
-          {/* Auto Mode */}
-          <button
-            onClick={() => setTheme('auto')}
-            className={`p-3 rounded-2xl border text-center transition-all active:scale-95 ${
-              theme === 'auto'
-                ? 'bg-amber-400/15 border-amber-400 text-amber-400 font-bold shadow-gold-glow-sm'
-                : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Laptop className="w-5 h-5 mx-auto mb-1 text-zinc-300" />
-            <span className="text-xs block">Auto</span>
-          </button>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-400 shrink-0">
+              <Moon className="w-4.5 h-4.5 text-amber-300 fill-amber-300/20" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white tracking-tight">Display Appearance</h3>
+              <p className="text-[11px] text-zinc-400">Obsidian Void &amp; Gold • OLED Dark Mode</p>
+            </div>
+          </div>
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-400 border border-amber-400/30 shadow-gold-glow-sm">
+            Dark Mode Active
+          </span>
         </div>
       </div>
 
