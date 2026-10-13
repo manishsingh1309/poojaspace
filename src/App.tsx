@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { pathToView, navigateTo, subscribeToRoute, updateDocumentTitle } from './utils/router';
 import { Layout } from './components/layout/Layout';
 import { HeroBanner } from './components/home/HeroBanner';
 import { WelcomeWaveGuide } from './components/home/WelcomeWaveGuide';
@@ -30,7 +31,11 @@ import { Image as ImageIcon, Plus, Video, FileText, Star } from 'lucide-react';
 
 
 export const App: React.FC = () => {
-  const [activeView, setActiveView] = useState<ActiveView>('home');
+  const initialRoute = useMemo(
+    () => pathToView(typeof window !== 'undefined' ? window.location.pathname : '/'),
+    []
+  );
+  const [activeView, setActiveView] = useState<ActiveView>(initialRoute.view);
   const [selectedAlbum, setSelectedAlbum] = useState<DriveFolder | null>(null);
 
   // Search & Filter state
@@ -51,6 +56,58 @@ export const App: React.FC = () => {
   const { files, knownFolders } = useDrive();
   const { isUploading, totalProgress, setQueueModalOpen } = useUpload();
   const { signIn } = useAuth();
+
+  // Navigation handler synchronized with browser URL and history
+  const handleNavigate = useCallback(
+    (view: ActiveView, album?: DriveFolder) => {
+      setActiveView(view);
+      if (album) {
+        setSelectedAlbum(album);
+      } else if (view !== 'album_detail') {
+        setSelectedAlbum(null);
+      }
+
+      navigateTo(view, {
+        albumId: album?.id,
+        albumName: album?.name,
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    []
+  );
+
+  // Subscribe to browser URL changes (popstate Back/Forward and direct deep links)
+  useEffect(() => {
+    // Check if arriving from Android Web Share Target
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('from_share') === 'true') {
+        setQueueModalOpen(true);
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    }
+
+    // Set initial title and resolve initial album if in /albums/:id
+    updateDocumentTitle(initialRoute.view);
+    if (initialRoute.albumId && knownFolders) {
+      const album = knownFolders.customAlbums.find((a) => a.id === initialRoute.albumId);
+      if (album) setSelectedAlbum(album);
+    }
+
+    const unsubscribe = subscribeToRoute((route) => {
+      setActiveView(route.view);
+      if (route.albumId && knownFolders) {
+        const album = knownFolders.customAlbums.find((a) => a.id === route.albumId);
+        if (album) setSelectedAlbum(album);
+      } else if (route.view !== 'album_detail') {
+        setSelectedAlbum(null);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    return () => unsubscribe();
+  }, [initialRoute, knownFolders, setQueueModalOpen]);
 
   // Filter and sort files
   const filteredFiles = useMemo(() => {
@@ -146,10 +203,7 @@ export const App: React.FC = () => {
   return (
     <Layout
       activeView={activeView}
-      onChangeView={(view) => {
-        setActiveView(view);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }}
+      onChangeView={(view) => handleNavigate(view)}
       onOpenQuickAdd={() => openQuickAddForFolder()}
     >
       {/* View router */}
@@ -158,13 +212,13 @@ export const App: React.FC = () => {
           {/* Gentle welcome wave & one-tap guide on first landing */}
           <WelcomeWaveGuide
             onConnectDrive={signIn}
-            onExplore={() => setActiveView('photos')}
+            onExplore={() => handleNavigate('photos')}
           />
 
           {/* Minimal, high-fashion Hero Banner */}
           <HeroBanner
             onQuickAdd={() => openQuickAddForFolder()}
-            onExplorePhotos={() => setActiveView('photos')}
+            onExplorePhotos={() => handleNavigate('photos')}
           />
 
           {/* Dynamic Real Google Account Storage Meter */}
@@ -172,7 +226,7 @@ export const App: React.FC = () => {
 
           {/* Recent Memories Gallery */}
           <RecentMemories
-            onViewAllPhotos={() => setActiveView('photos')}
+            onViewAllPhotos={() => handleNavigate('photos')}
             onSelectFile={handleSelectFile}
             onAddPhotos={() => openQuickAddForFolder(knownFolders?.photosId, 'Photos')}
           />
@@ -324,10 +378,7 @@ export const App: React.FC = () => {
         <AlbumGrid
           albums={knownFolders?.customAlbums || []}
           files={files}
-          onSelectAlbum={(album) => {
-            setSelectedAlbum(album);
-            setActiveView('album_detail');
-          }}
+          onSelectAlbum={(album) => handleNavigate('album_detail', album)}
         />
       )}
 
@@ -335,7 +386,7 @@ export const App: React.FC = () => {
         <AlbumDetailView
           album={selectedAlbum}
           files={files}
-          onBack={() => setActiveView('albums')}
+          onBack={() => handleNavigate('albums')}
           onQuickAdd={(id, name) => openQuickAddForFolder(id, name)}
           onSelectFile={handleSelectFile}
         />

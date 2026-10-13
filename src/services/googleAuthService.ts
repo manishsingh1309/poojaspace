@@ -98,6 +98,37 @@ class GoogleAuthService {
     }
   }
 
+  constructor() {
+    this.loadCachedToken();
+  }
+
+  private loadCachedToken(): void {
+    if (typeof window === 'undefined') return;
+    try {
+      const cached = sessionStorage.getItem('poojaspace_oauth_token');
+      const expiresAt = sessionStorage.getItem('poojaspace_oauth_expires');
+      if (cached && expiresAt) {
+        const exp = Number(expiresAt);
+        if (exp > Date.now()) {
+          this.accessToken = cached;
+          this.tokenExpiresAt = exp;
+          const cachedProfile = sessionStorage.getItem('poojaspace_user_profile');
+          if (cachedProfile) {
+            this.userProfile = JSON.parse(cachedProfile);
+          } else {
+            this.fetchUserProfile();
+          }
+        } else {
+          sessionStorage.removeItem('poojaspace_oauth_token');
+          sessionStorage.removeItem('poojaspace_oauth_expires');
+          sessionStorage.removeItem('poojaspace_user_profile');
+        }
+      }
+    } catch (e) {
+      // Safe fallback
+    }
+  }
+
   public setToken(token: string, expiresInSeconds: number): void {
     this.accessToken = token;
     if (expiresInSeconds <= 0) {
@@ -105,6 +136,15 @@ class GoogleAuthService {
     } else {
       // Set expiry 60 seconds early to prevent edge-case mid-request expiration
       this.tokenExpiresAt = Date.now() + Math.max(0, expiresInSeconds - 60) * 1000;
+    }
+
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('poojaspace_oauth_token', token);
+        sessionStorage.setItem('poojaspace_oauth_expires', String(this.tokenExpiresAt));
+      } catch (e) {
+        // Safe fallback
+      }
     }
   }
 
@@ -166,6 +206,13 @@ class GoogleAuthService {
           picture: data.picture,
           id: data.sub,
         };
+        if (typeof window !== 'undefined') {
+          try {
+            sessionStorage.setItem('poojaspace_user_profile', JSON.stringify(this.userProfile));
+          } catch (e) {
+            // Safe fallback
+          }
+        }
         return this.userProfile;
       }
     } catch (err) {
@@ -186,6 +233,15 @@ class GoogleAuthService {
     this.accessToken = null;
     this.tokenExpiresAt = null;
     this.userProfile = null;
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.removeItem('poojaspace_oauth_token');
+        sessionStorage.removeItem('poojaspace_oauth_expires');
+        sessionStorage.removeItem('poojaspace_user_profile');
+      } catch (e) {
+        // Safe fallback
+      }
+    }
     this.notifyListeners();
   }
 }
