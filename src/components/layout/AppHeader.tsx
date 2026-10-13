@@ -1,7 +1,8 @@
 import React from 'react';
-import { Menu, Cloud, UploadCloud } from 'lucide-react';
+import { Menu, Cloud, UploadCloud, Sun, Moon, Laptop } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useUpload } from '../../context/UploadContext';
+import { useTheme } from '../../context/ThemeContext';
 import { POOJA_HERO_IMAGE } from '../../assets/personalPhotos';
 
 interface AppHeaderProps {
@@ -12,6 +13,7 @@ interface AppHeaderProps {
 export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
   const { isAuthenticated, userProfile, isConfigured } = useAuth();
   const { isUploading, totalProgress, setQueueModalOpen, queue } = useUpload();
+  const { theme, toggleTheme } = useTheme();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -55,7 +57,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
           </div>
         </div>
 
-        {/* Right: Active Upload / Cloud Status & Menu */}
+        {/* Right: Theme Toggle & Cloud Status & Menu */}
         <div className="flex items-center gap-2">
           {/* Active upload floating chip */}
           {isUploading && (
@@ -68,6 +70,22 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
               <span className="text-[10px] opacity-80">({activeCount})</span>
             </button>
           )}
+
+          {/* Theme Toggle (Dark / Light / Auto) */}
+          <button
+            onClick={toggleTheme}
+            aria-label={`Switch theme (current: ${theme})`}
+            title={`Theme: ${theme.toUpperCase()} (tap to change)`}
+            className="p-2 text-zinc-300 hover:text-amber-400 hover:bg-zinc-900 border border-zinc-800 rounded-xl transition-all flex items-center justify-center min-touch-target"
+          >
+            {theme === 'light' ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : theme === 'dark' ? (
+              <Moon className="w-4 h-4 text-amber-300" />
+            ) : (
+              <Laptop className="w-4 h-4 text-zinc-300" />
+            )}
+          </button>
 
           {/* Cloud connection indicator */}
           <button
@@ -101,3 +119,4 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onOpenMenu }) => {
     </header>
   );
 };
+

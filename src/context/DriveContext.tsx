@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { DriveFile, KnownFolders, DriveStorageStats, DriveFolder } from '../types/drive';
+import { DriveFile, KnownFolders, DriveStorageStats, DriveFolder, AccountStorageQuota } from '../types/drive';
 import { driveApiClient } from '../services/driveApiClient';
 import { useAuth } from './AuthContext';
 import { PERSONAL_MEMORY_PHOTOS } from '../assets/personalPhotos';
@@ -9,6 +9,7 @@ interface DriveContextType {
   files: DriveFile[];
   trashedFiles: DriveFile[];
   stats: DriveStorageStats;
+  accountQuota: AccountStorageQuota | null;
   isLoading: boolean;
   error: string | null;
   isMockMode: boolean;
@@ -49,6 +50,7 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [knownFolders, setKnownFolders] = useState<KnownFolders | null>(null);
   const [files, setFiles] = useState<DriveFile[]>([]);
   const [trashedFiles, setTrashedFiles] = useState<DriveFile[]>([]);
+  const [accountQuota, setAccountQuota] = useState<AccountStorageQuota | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isMockMode, setIsMockMode] = useState(!isAuthenticated);
@@ -71,6 +73,15 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
     setFiles(INITIAL_MOCK_FILES);
     setTrashedFiles([]);
+    setAccountQuota({
+      limit: 16106127360, // 15 GB
+      usage: 26424115, // ~25.2 MB
+      usageInDrive: 26424115,
+      freeBytes: 16106127360 - 26424115,
+      percentUsed: 1,
+      userDisplayName: 'Pooja didi',
+      userEmail: 'pooja@gmail.com',
+    });
   }, []);
 
   // Real Google Drive tree and files discovery
@@ -79,6 +90,10 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setError(null);
     setIsMockMode(false);
     try {
+      // Fetch REAL Google account quota directly from about.get API
+      const quota = await driveApiClient.getAboutQuota(authToken);
+      setAccountQuota(quota);
+
       const tree = await driveApiClient.discoverOrCreateTree(authToken);
       setKnownFolders(tree);
 
@@ -121,6 +136,7 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       loadMockData();
     }
   }, [isAuthenticated, token, loadRealDriveData, loadMockData]);
+
 
   const refreshFiles = async () => {
     if (isAuthenticated && token && knownFolders) {
@@ -385,6 +401,7 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         files,
         trashedFiles,
         stats,
+        accountQuota,
         isLoading,
         error,
         isMockMode,

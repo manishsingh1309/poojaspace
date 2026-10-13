@@ -58,6 +58,17 @@ export interface GoogleUserProfile {
   id?: string;
 }
 
+export interface AccountStorageQuota {
+  limit: number; // Total Google quota in bytes (e.g. 15 GB, 100 GB)
+  usage: number; // Total used in Google account (bytes)
+  usageInDrive: number; // Used in Drive (bytes)
+  freeBytes: number; // Remaining free bytes in Google account
+  percentUsed: number; // 0 to 100
+  userDisplayName?: string;
+  userEmail?: string;
+  userPhoto?: string;
+}
+
 export interface DriveApiResponse<T> {
   files?: T[];
   nextPageToken?: string;
@@ -67,3 +78,4 @@ export interface DriveApiResponse<T> {
     status?: string;
   };
 }
+

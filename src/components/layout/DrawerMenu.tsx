@@ -95,20 +95,22 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
                 alt="Pooja"
                 className="w-14 h-14 rounded-full object-cover border-2 border-amber-400 shadow-gold-glow-sm"
               />
-              <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0D0D11] rounded-full" />
+              <span className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-[#0D0D11] ${isAuthenticated ? 'bg-emerald-400' : 'bg-amber-400'}`} />
             </div>
 
-            <div>
-              <h2 className="text-base font-bold text-white tracking-tight">Pooja Didi</h2>
-              <p className="text-xs text-amber-400 font-medium">
-                {isAuthenticated ? userProfile?.email : isMockMode ? 'Demo Obsidian Mode' : 'Ready to Connect'}
+            <div className="min-w-0 flex-1">
+              <h2 className="text-base font-bold text-white tracking-tight truncate">
+                {isAuthenticated ? (userProfile?.name || 'Pooja Didi') : 'Pooja Didi'}
+              </h2>
+              <p className="text-xs text-amber-400 font-medium truncate">
+                {isAuthenticated ? (userProfile?.email || 'Google Drive Active') : isMockMode ? 'Demo Preview Mode' : 'Ready to Connect'}
               </p>
             </div>
           </div>
 
           {/* Quick Storage Overview Pill */}
           <div className="mt-4 p-3 bg-zinc-900/90 rounded-2xl border border-zinc-800 flex items-center justify-between text-xs">
-            <span className="text-zinc-400 font-medium">Poojaspace Vault:</span>
+            <span className="text-zinc-400 font-medium">Vault Usage:</span>
             <span className="font-bold text-amber-400">{formatBytes(stats.totalBytes)}</span>
           </div>
         </div>

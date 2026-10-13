@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
+import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { DriveProvider } from './context/DriveContext';
 import { UploadProvider } from './context/UploadContext';
@@ -23,12 +24,15 @@ if ('serviceWorker' in navigator) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthProvider>
-      <DriveProvider>
-        <UploadProvider>
-          <App />
-        </UploadProvider>
-      </DriveProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <DriveProvider>
+          <UploadProvider>
+            <App />
+          </UploadProvider>
+        </DriveProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
+

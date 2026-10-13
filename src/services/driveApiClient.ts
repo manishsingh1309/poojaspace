@@ -1,4 +1,4 @@
-import { DriveFile, DriveFolder, KnownFolders, DriveStorageStats } from '../types/drive';
+import { DriveFile, DriveFolder, KnownFolders, DriveStorageStats, AccountStorageQuota } from '../types/drive';
 
 const DRIVE_API_BASE = 'https://www.googleapis.com/drive/v3';
 
@@ -415,6 +415,45 @@ export class DriveApiClient {
       recentlyDeletedCount,
     };
   }
+
+  /**
+   * Fetch real Google account storage quota and user profile.
+   */
+  public async getAboutQuota(token: string): Promise<AccountStorageQuota> {
+    try {
+      const res = await this.request<{
+        user?: { displayName?: string; emailAddress?: string; photoLink?: string };
+        storageQuota?: { limit?: string; usage?: string; usageInDrive?: string };
+      }>('/about?fields=user,storageQuota', token);
+
+      const limit = Number(res.storageQuota?.limit) || 16106127360; // Default 15 GB if unreturned
+      const usage = Number(res.storageQuota?.usage) || 0;
+      const usageInDrive = Number(res.storageQuota?.usageInDrive) || 0;
+      const freeBytes = Math.max(0, limit - usage);
+      const percentUsed = Math.min(100, Math.round((usage / limit) * 100));
+
+      return {
+        limit,
+        usage,
+        usageInDrive,
+        freeBytes,
+        percentUsed,
+        userDisplayName: res.user?.displayName,
+        userEmail: res.user?.emailAddress,
+        userPhoto: res.user?.photoLink,
+      };
+    } catch {
+      // Graceful fallback if about endpoint restricted
+      return {
+        limit: 16106127360,
+        usage: 0,
+        usageInDrive: 0,
+        freeBytes: 16106127360,
+        percentUsed: 0,
+      };
+    }
+  }
 }
 
 export const driveApiClient = new DriveApiClient();
+

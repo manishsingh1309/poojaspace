@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { Layout } from './components/layout/Layout';
 import { HeroBanner } from './components/home/HeroBanner';
-import { QuickStats } from './components/home/QuickStats';
-import { QuickActions } from './components/home/QuickActions';
+import { WelcomeWaveGuide } from './components/home/WelcomeWaveGuide';
+import { LiveStorageMeter } from './components/home/LiveStorageMeter';
 import { RecentMemories } from './components/home/RecentMemories';
-import { PersonalNote } from './components/home/PersonalNote';
 import { FilterSearchBar } from './components/library/FilterSearchBar';
 import { PhotoGallery } from './components/library/PhotoGallery';
 import { DocumentList } from './components/library/DocumentList';
+
 import { LightboxModal } from './components/library/LightboxModal';
 import { FileDetailDrawer } from './components/library/FileDetailDrawer';
 import { VideoPlayerModal } from './components/library/VideoPlayerModal';
@@ -24,7 +24,9 @@ import { ActiveView, FileCategory, SortOption } from './types/navigation';
 import { DriveFile, DriveFolder } from './types/drive';
 import { useDrive } from './context/DriveContext';
 import { useUpload } from './context/UploadContext';
+import { useAuth } from './context/AuthContext';
 import { Image as ImageIcon, Plus, Video, FileText, Star } from 'lucide-react';
+
 
 export const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ActiveView>('home');
@@ -47,6 +49,7 @@ export const App: React.FC = () => {
 
   const { files, knownFolders } = useDrive();
   const { isUploading, totalProgress, setQueueModalOpen } = useUpload();
+  const { signIn } = useAuth();
 
   // Filter and sort files
   const filteredFiles = useMemo(() => {
@@ -141,20 +144,30 @@ export const App: React.FC = () => {
     >
       {/* View router */}
       {activeView === 'home' && (
-        <div className="space-y-6 animate-fade-in">
+        <div className="space-y-4 sm:space-y-5 animate-fade-in">
+          {/* Gentle welcome wave & one-tap guide on first landing */}
+          <WelcomeWaveGuide
+            onConnectDrive={signIn}
+            onExplore={() => setActiveView('photos')}
+          />
+
+          {/* Minimal, high-fashion Hero Banner */}
           <HeroBanner
             onQuickAdd={() => openQuickAddForFolder()}
             onExplorePhotos={() => setActiveView('photos')}
           />
-          <QuickStats />
-          <QuickActions onSelectView={setActiveView} />
+
+          {/* Dynamic Real Google Account Storage Meter */}
+          <LiveStorageMeter />
+
+          {/* Recent Memories Gallery */}
           <RecentMemories
             onViewAllPhotos={() => setActiveView('photos')}
             onSelectFile={handleSelectFile}
           />
-          <PersonalNote />
         </div>
       )}
+
 
       {activeView === 'photos' && (
         <div className="space-y-4 animate-fade-in">
