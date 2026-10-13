@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="obsidianBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181B"/>
+      <stop offset="50%" stop-color="#09090B"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="35%" stop-color="#F59E0B"/>
+      <stop offset="70%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#F59E0B" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#B45309" stop-opacity="0.6"/>
+    </linearGradient>
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#F59E0B" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background Matte Obsidian Rounded Box -->
+  <rect width="512" height="512" rx="128" fill="url(#obsidianBg)"/>
+  <rect x="8" y="8" width="496" height="496" rx="120" stroke="url(#goldBorder)" stroke-width="3"/>
+
+  <!-- Subtle luxury concentric ring -->
+  <circle cx="256" cy="256" r="184" stroke="#F59E0B" stroke-opacity="0.12" stroke-width="1.5" stroke-dasharray="6 6"/>
+
+  <!-- Central Luxury Monogram 'P' & Star -->
+  <g filter="url(#goldGlow)">
+    <!-- Vertical stem -->
+    <rect x="172" y="132" width="36" height="248" rx="18" fill="url(#goldGradient)"/>
+
+    <!-- P Loop -->
+    <path d="M190 132 C285 132, 344 170, 344 230 C344 290, 285 328, 190 328" 
+          fill="none" stroke="url(#goldGradient)" stroke-width="36" stroke-linecap="round"/>
+
+    <!-- 4-point Diamond Star at top right -->
+    <path d="M366 142 Q366 172 396 172 Q366 172 366 202 Q366 172 336 172 Q366 172 366 142 Z" 
+          fill="url(#goldGradient)"/>
+
+    <!-- Small diamond sparkle bottom left -->
+    <path d="M136 348 Q136 362 150 362 Q136 362 136 376 Q136 362 122 362 Q136 362 136 348 Z" 
+          fill="url(#goldGradient)" opacity="0.8"/>
+  </g>
+</svg>
