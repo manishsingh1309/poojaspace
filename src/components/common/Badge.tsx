@@ -17,7 +17,7 @@ export const Badge: React.FC<BadgeProps> = ({
 }) => {
   const variantStyles = {
     gold: 'bg-amber-400/10 text-amber-400 border-amber-400/30',
-    rose: 'bg-amber-400/10 text-amber-400 border-amber-400/30',
+    rose: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
     sage: 'bg-emerald-400/10 text-emerald-400 border-emerald-400/30',
     amber: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
     plum: 'bg-zinc-800/90 text-zinc-300 border-zinc-700/60',

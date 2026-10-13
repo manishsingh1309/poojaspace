@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Sparkles,
 } from 'lucide-react';
-import { Button } from '../common/Button';
 import { useAuth } from '../../context/AuthContext';
 import { useDrive } from '../../context/DriveContext';
 import { POOJA_HERO_IMAGE } from '../../assets/personalPhotos';
@@ -77,25 +76,21 @@ export const SettingsView: React.FC = () => {
 
         <div className="pt-2 border-t border-zinc-800/80">
           {isAuthenticated ? (
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={signOut}
-              className="w-full text-rose-400 hover:text-rose-300 border-rose-500/30"
-              icon={<LogOut className="w-4 h-4" />}
+              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-bold bg-red-500/15 border-2 border-red-500/50 text-red-200 hover:text-white hover:bg-red-500/25 active:scale-98 transition-all shadow-md min-touch-target"
             >
-              Disconnect Google Drive
-            </Button>
+              <LogOut className="w-4.5 h-4.5 text-red-400 stroke-[2.5]" />
+              <span className="tracking-wide">Disconnect Google Drive</span>
+            </button>
           ) : (
-            <Button
-              variant="primary"
-              size="md"
+            <button
               onClick={signIn}
-              className="w-full gold-button font-bold"
-              icon={<LogIn className="w-4 h-4 text-black" />}
+              className="w-full gold-button font-extrabold py-3.5 px-4 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-gold-glow min-touch-target"
             >
-              {isConfigured ? 'Connect Google Drive' : 'Connect Google Account'}
-            </Button>
+              <LogIn className="w-4 h-4 text-black stroke-[2.5]" />
+              <span>{isConfigured ? 'Connect Google Drive' : 'Connect Google Account'}</span>
+            </button>
           )}
         </div>
       </div>

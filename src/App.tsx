@@ -27,7 +27,7 @@ import { DriveFile, DriveFolder } from './types/drive';
 import { useDrive } from './context/DriveContext';
 import { useUpload } from './context/UploadContext';
 import { useAuth } from './context/AuthContext';
-import { Image as ImageIcon, Plus, Video, FileText, Star } from 'lucide-react';
+import { Image as ImageIcon, Plus, Video, FileText, Star, Sparkles } from 'lucide-react';
 
 
 export const App: React.FC = () => {
@@ -290,8 +290,11 @@ export const App: React.FC = () => {
         <div className="space-y-4 animate-fade-in">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-obsidian-text-primary tracking-tight">Videos</h2>
-              <p className="text-xs text-obsidian-text-muted">Recorded clips and memories</p>
+              <h2 className="text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
+                <span>Videos</span>
+                <Sparkles className="w-4 h-4 text-amber-400 fill-amber-400" />
+              </h2>
+              <p className="text-xs text-zinc-400">Recorded clips and memories</p>
             </div>
             <button
               onClick={() => openQuickAddForFolder(knownFolders?.videosId, 'Videos')}
@@ -333,10 +336,11 @@ export const App: React.FC = () => {
         <div className="space-y-4 animate-fade-in">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-obsidian-text-primary tracking-tight">
-                Documents &amp; Files
+              <h2 className="text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
+                <span>Documents &amp; Files</span>
+                <Sparkles className="w-4 h-4 text-amber-400 fill-amber-400" />
               </h2>
-              <p className="text-xs text-obsidian-text-muted">PDFs, notes, receipts, and files</p>
+              <p className="text-xs text-zinc-400">PDFs, notes, receipts, and files</p>
             </div>
             <button
               onClick={() => openQuickAddForFolder(knownFolders?.documentsId, 'Documents')}

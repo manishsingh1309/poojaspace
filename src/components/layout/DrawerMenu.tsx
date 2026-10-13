@@ -77,15 +77,15 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
         aria-hidden="true"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-[#0D0D11] border-l border-zinc-800 shadow-2xl flex flex-col z-10 safe-top safe-bottom">
+      <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-[#0D0D14] border-l border-zinc-800 shadow-2xl flex flex-col z-10 safe-top safe-bottom">
         {/* Header with profile */}
-        <div className="p-5 border-b border-zinc-800/80 bg-gradient-to-br from-[#16161C] to-[#0D0D11] relative">
+        <div className="p-5 border-b border-zinc-800/90 bg-gradient-to-br from-[#161724] to-[#0D0D14] relative">
           <button
             onClick={onClose}
             aria-label="Close menu"
-            className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800/60 min-touch-target flex items-center justify-center transition-colors"
+            className="absolute top-4 right-4 p-2 text-zinc-300 hover:text-white bg-zinc-800/80 hover:bg-zinc-800 border border-zinc-700/60 rounded-full min-touch-target flex items-center justify-center transition-colors shadow-sm"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4.5 h-4.5" />
           </button>
 
           <div className="flex items-center gap-3 mt-1">
@@ -95,23 +95,23 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
                 alt="Pooja"
                 className="w-14 h-14 rounded-full object-cover border-2 border-amber-400 shadow-gold-glow-sm"
               />
-              <span className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-[#0D0D11] ${isAuthenticated ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+              <span className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-[#0D0D14] ${isAuthenticated ? 'bg-emerald-400' : 'bg-amber-400'}`} />
             </div>
 
             <div className="min-w-0 flex-1">
-              <h2 className="text-base font-bold text-white tracking-tight truncate">
+              <h2 className="text-base font-extrabold text-white tracking-tight truncate">
                 {isAuthenticated ? (userProfile?.name || 'Pooja Didi') : 'Pooja Didi'}
               </h2>
-              <p className="text-xs text-amber-400 font-medium truncate">
+              <p className="text-xs text-amber-400 font-semibold truncate">
                 {isAuthenticated ? (userProfile?.email || 'Google Drive Active') : isMockMode ? 'Demo Preview Mode' : 'Ready to Connect'}
               </p>
             </div>
           </div>
 
           {/* Quick Storage Overview Pill */}
-          <div className="mt-4 p-3 bg-zinc-900/90 rounded-2xl border border-zinc-800 flex items-center justify-between text-xs">
-            <span className="text-zinc-400 font-medium">Vault Usage:</span>
-            <span className="font-bold text-amber-400">{formatBytes(stats.totalBytes)}</span>
+          <div className="mt-4 p-3 bg-[#161724] rounded-2xl border border-zinc-700/70 flex items-center justify-between text-xs shadow-inner">
+            <span className="text-zinc-300 font-medium">Vault Usage:</span>
+            <span className="font-extrabold text-amber-400 text-xs sm:text-sm">{formatBytes(stats.totalBytes)}</span>
           </div>
         </div>
 
@@ -124,26 +124,26 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
               <button
                 key={item.id}
                 onClick={() => handleSelect(item.id)}
-                className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs sm:text-sm font-medium transition-all min-touch-target ${
+                className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs sm:text-sm font-semibold transition-all min-touch-target ${
                   isActive
-                    ? 'bg-amber-400/10 text-amber-400 border border-amber-400/25 font-bold shadow-sm'
-                    : 'text-zinc-300 hover:bg-zinc-900 hover:text-white'
+                    ? 'bg-amber-400/15 text-amber-300 border border-amber-400/40 font-bold shadow-sm'
+                    : 'text-zinc-200 hover:bg-zinc-900/90 hover:text-white'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon
                     className={`w-4.5 h-4.5 ${
-                      isActive ? 'text-amber-400' : 'text-zinc-500'
+                      isActive ? 'text-amber-400' : 'text-zinc-400 group-hover:text-amber-400'
                     }`}
                   />
                   <span>{item.label}</span>
                 </div>
                 {item.badge !== undefined && item.badge !== 0 && (
                   <span
-                    className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
+                    className={`text-xs px-2.5 py-0.5 rounded-full font-bold ${
                       isActive
-                        ? 'bg-amber-400/20 text-amber-300'
-                        : 'bg-zinc-800 text-zinc-400'
+                        ? 'bg-amber-400/25 text-amber-300 border border-amber-400/30'
+                        : 'bg-zinc-800 text-zinc-300 border border-zinc-700/60'
                     }`}
                   >
                     {item.badge}
@@ -158,25 +158,25 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
             href="https://one.google.com/storage"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs text-zinc-400 hover:text-amber-400 hover:bg-zinc-900 transition-colors min-touch-target"
+            className="w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-medium text-zinc-300 hover:text-amber-400 hover:bg-zinc-900/90 transition-colors min-touch-target"
           >
             <span>Google One Storage</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
           </a>
         </div>
 
         {/* Footer / Account action */}
-        <div className="p-4 border-t border-zinc-800 bg-[#09090B]">
+        <div className="p-4 border-t border-zinc-800/90 bg-[#09090E]">
           {isAuthenticated ? (
             <button
               onClick={() => {
                 signOut();
                 onClose();
               }}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl text-xs font-semibold text-zinc-400 hover:text-red-400 hover:bg-zinc-900 transition-colors min-touch-target"
+              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-bold bg-red-500/15 border-2 border-red-500/50 text-red-200 hover:text-white hover:bg-red-500/25 active:scale-98 transition-all shadow-md min-touch-target"
             >
-              <LogOut className="w-4 h-4" />
-              <span>Disconnect Google Drive</span>
+              <LogOut className="w-4.5 h-4.5 text-red-400 stroke-[2.5]" />
+              <span className="tracking-wide">Disconnect Google Drive</span>
             </button>
           ) : (
             <button
@@ -184,15 +184,15 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
                 signIn();
                 onClose();
               }}
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs font-bold gold-button min-touch-target"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-extrabold gold-button min-touch-target shadow-gold-glow"
             >
-              <LogIn className="w-4 h-4 text-black" />
+              <LogIn className="w-4 h-4 text-black stroke-[2.5]" />
               <span>{isConfigured ? 'Connect Google Drive' : 'Configure Client ID'}</span>
             </button>
           )}
 
-          <div className="mt-3 text-center text-[11px] text-zinc-500 flex items-center justify-center gap-1.5">
-            <Sparkles className="w-3 h-3 text-amber-400 inline" />
+          <div className="mt-3 text-center text-[11px] text-zinc-400 flex items-center justify-center gap-1.5 font-medium">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400 fill-amber-400 inline" />
             <span>Built with love for Pooja didi</span>
           </div>
         </div>

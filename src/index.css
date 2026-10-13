@@ -12,6 +12,10 @@
 }
 
 /* Base phone optimizations - Optimized for Oppo F9 Pro & iOS/Android devices */
+html {
+  scrollbar-gutter: stable;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -25,10 +29,19 @@ html, body {
     radial-gradient(circle at 10% 15%, rgba(245, 158, 11, 0.07) 0%, transparent 40%),
     radial-gradient(circle at 90% 12%, rgba(244, 63, 94, 0.05) 0%, transparent 35%),
     radial-gradient(circle at 50% 85%, rgba(139, 92, 246, 0.04) 0%, transparent 45%);
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.35s ease, color 0.3s ease;
+  overscroll-behavior-y: none;
+}
+
+/* Bottom Navigation Bar fix to prevent jumping during touch scrolling */
+nav.fixed {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Safe area padding utilities for Oppo & Android gesture navigation */
@@ -57,12 +70,12 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.6);
 }
 
 /* Glassmorphism & Luxury Surfaces */
