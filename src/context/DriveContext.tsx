@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { DriveFile, KnownFolders, DriveStorageStats, DriveFolder, AccountStorageQuota } from '../types/drive';
 import { driveApiClient } from '../services/driveApiClient';
 import { useAuth } from './AuthContext';
+import { PERSONAL_MEMORY_PHOTOS } from '../assets/personalPhotos';
+
 interface DriveContextType {
   knownFolders: KnownFolders | null;
   files: DriveFile[];
@@ -13,6 +15,7 @@ interface DriveContextType {
   isMockMode: boolean;
   refreshFiles: () => Promise<void>;
   refreshTree: () => Promise<void>;
+  addUploadedFile: (file: DriveFile) => void;
   renameFile: (id: string, name: string) => Promise<void>;
   moveFile: (id: string, newParentId: string, oldParentId?: string) => Promise<void>;
   toggleFavourite: (id: string, fav: boolean) => Promise<void>;
@@ -34,7 +37,7 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [error, setError] = useState<string | null>(null);
   const [isMockMode, setIsMockMode] = useState(!isAuthenticated);
 
-  // Load or initialize Mock files
+  // Load or initialize Mock files with rich real demo memories & videos
   const loadMockData = useCallback(() => {
     setIsMockMode(true);
     setKnownFolders({
@@ -45,18 +48,79 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       audioOtherId: 'mock_other_folder',
       albumsRootId: 'mock_albums_root',
       recentlyDeletedId: 'mock_trash_folder',
-      customAlbums: [],
+      customAlbums: [
+        { id: 'mock_album_family', name: 'Family & Diwali ✨', parentId: 'mock_albums_root' },
+        { id: 'mock_album_smiles', name: 'Golden Smiles 🌸', parentId: 'mock_albums_root' },
+      ],
     });
-    setFiles([]);
+
+    const mockPhotos: DriveFile[] = PERSONAL_MEMORY_PHOTOS.map((p, idx) => ({
+      id: p.id,
+      name: `${p.title}.jpg`,
+      mimeType: 'image/jpeg',
+      size: 1024 * 1024 * 2 + idx * 250000,
+      thumbnailLink: p.src,
+      webContentLink: p.src,
+      webViewLink: p.src,
+      createdTime: p.year ? `${p.year}-06-15T10:00:00Z` : new Date(Date.now() - idx * 86400000 * 5).toISOString(),
+      modifiedTime: new Date().toISOString(),
+      parents: ['mock_photos_folder', idx % 2 === 0 ? 'mock_album_family' : 'mock_album_smiles'],
+      appProperties: {
+        favourite: idx < 3 ? 'true' : 'false',
+      },
+    }));
+
+    const mockVideos: DriveFile[] = [
+      {
+        id: 'demo_vid_1',
+        name: 'Diwali Light & Celebration.mp4',
+        mimeType: 'video/mp4',
+        size: 18450000,
+        thumbnailLink: '/assets/IMG_7434.jpg',
+        webContentLink: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        webViewLink: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        createdTime: new Date(Date.now() - 86400000 * 2).toISOString(),
+        modifiedTime: new Date().toISOString(),
+        parents: ['mock_videos_folder', 'mock_album_family'],
+        appProperties: { favourite: 'true' },
+      },
+      {
+        id: 'demo_vid_2',
+        name: 'Family Gathering Moments.mp4',
+        mimeType: 'video/mp4',
+        size: 29500000,
+        thumbnailLink: '/assets/special one.jpg',
+        webContentLink: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        webViewLink: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        createdTime: new Date(Date.now() - 86400000 * 7).toISOString(),
+        modifiedTime: new Date().toISOString(),
+        parents: ['mock_videos_folder'],
+        appProperties: { favourite: 'false' },
+      },
+    ];
+
+    const mockDocs: DriveFile[] = [
+      {
+        id: 'demo_doc_1',
+        name: 'Family Trip Itinerary & Notes.pdf',
+        mimeType: 'application/pdf',
+        size: 345000,
+        createdTime: new Date(Date.now() - 86400000 * 10).toISOString(),
+        modifiedTime: new Date().toISOString(),
+        parents: ['mock_docs_folder'],
+      },
+    ];
+
+    setFiles([...mockPhotos, ...mockVideos, ...mockDocs]);
     setTrashedFiles([]);
     setAccountQuota({
       limit: 16106127360, // 15 GB
-      usage: 0,
-      usageInDrive: 0,
-      freeBytes: 16106127360,
-      percentUsed: 0,
+      usage: 48295000,
+      usageInDrive: 48295000,
+      freeBytes: 16106127360 - 48295000,
+      percentUsed: 1,
       userDisplayName: 'Pooja Didi',
-      userEmail: '',
+      userEmail: 'pooja@family.drive',
     });
   }, []);
 
@@ -73,17 +137,10 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const tree = await driveApiClient.discoverOrCreateTree(authToken);
       setKnownFolders(tree);
 
-      const parentIds = [
-        tree.photosId,
-        tree.videosId,
-        tree.documentsId,
-        tree.audioOtherId,
-        ...tree.customAlbums.map((a) => a.id),
-      ].filter(Boolean) as string[];
-
+      // Query all files created in Poojaspace, excluding Recently Deleted folder
       const activeFilesRes = await driveApiClient.listFiles(authToken, {
-        parentIds,
-        pageSize: 200,
+        excludeParentId: tree.recentlyDeletedId,
+        pageSize: 500,
       });
       setFiles(activeFilesRes.files);
 
@@ -113,6 +170,15 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [isAuthenticated, token, loadRealDriveData, loadMockData]);
 
+  const addUploadedFile = useCallback((file: DriveFile) => {
+    setFiles((prev) => {
+      const exists = prev.some((f) => f.id === file.id);
+      if (exists) {
+        return prev.map((f) => (f.id === file.id ? file : f));
+      }
+      return [file, ...prev];
+    });
+  }, []);
 
   const refreshFiles = async () => {
     if (isAuthenticated && token && knownFolders) {
@@ -124,17 +190,9 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         console.warn('Could not refresh quota:', err);
       }
 
-      const parentIds = [
-        knownFolders.photosId,
-        knownFolders.videosId,
-        knownFolders.documentsId,
-        knownFolders.audioOtherId,
-        ...knownFolders.customAlbums.map((a) => a.id),
-      ].filter(Boolean) as string[];
-
       const activeFilesRes = await driveApiClient.listFiles(token, {
-        parentIds,
-        pageSize: 200,
+        excludeParentId: knownFolders.recentlyDeletedId,
+        pageSize: 500,
       });
       setFiles(activeFilesRes.files);
 
@@ -404,6 +462,7 @@ export const DriveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         isMockMode,
         refreshFiles,
         refreshTree,
+        addUploadedFile,
         renameFile,
         moveFile,
         toggleFavourite,

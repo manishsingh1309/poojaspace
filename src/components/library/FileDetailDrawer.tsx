@@ -12,9 +12,11 @@ import {
   Check,
   Calendar,
   HardDrive,
-  FileText,
 } from 'lucide-react';
 import { useDrive } from '../../context/DriveContext';
+import { useAuth } from '../../context/AuthContext';
+import { mediaStreamService } from '../../services/mediaStreamService';
+import { DriveImage } from '../common/DriveImage';
 
 interface FileDetailDrawerProps {
   file: DriveFile | null;
@@ -29,6 +31,7 @@ export const FileDetailDrawer: React.FC<FileDetailDrawerProps> = ({
 }) => {
   const { renameFile, moveFile, toggleFavourite, softDeleteFile, knownFolders } =
     useDrive();
+  const { token } = useAuth();
 
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameInput, setNameInput] = useState('');
@@ -76,17 +79,13 @@ export const FileDetailDrawer: React.FC<FileDetailDrawerProps> = ({
       <div className="space-y-5">
         {/* Thumbnail / Preview Header */}
         <div className="flex items-center gap-3.5 p-3.5 bg-obsidian-surface rounded-2xl border border-obsidian-border">
-          {file.thumbnailLink ? (
-            <img
-              src={file.thumbnailLink}
+          <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-obsidian-border">
+            <DriveImage
+              file={file}
               alt={file.name}
-              className="w-16 h-16 rounded-xl object-cover shrink-0 border border-obsidian-border"
+              className="w-full h-full object-cover"
             />
-          ) : (
-            <div className="w-16 h-16 rounded-xl bg-gold-500/10 text-gold-400 border border-gold-500/20 flex items-center justify-center shrink-0">
-              <FileText className="w-8 h-8" />
-            </div>
-          )}
+          </div>
 
           <div className="min-w-0 flex-1">
             {isEditingName ? (
@@ -221,18 +220,13 @@ export const FileDetailDrawer: React.FC<FileDetailDrawerProps> = ({
           </Button>
 
           {/* Download Original */}
-          {file.webContentLink && (
-            <a
-              href={file.webContentLink}
-              download={file.name}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center font-medium text-xs px-3 py-2 gap-1.5 rounded-2xl border border-obsidian-border text-obsidian-text-primary bg-obsidian-surface hover:border-gold-500/40 min-touch-target transition-colors"
-            >
-              <Download className="w-4 h-4 text-gold-400" />
-              <span>Download file</span>
-            </a>
-          )}
+          <button
+            onClick={() => mediaStreamService.downloadFile(file, token)}
+            className="inline-flex items-center justify-center font-medium text-xs px-3 py-2 gap-1.5 rounded-2xl border border-obsidian-border text-obsidian-text-primary bg-obsidian-surface hover:border-gold-500/40 min-touch-target transition-colors active:scale-95"
+          >
+            <Download className="w-4 h-4 text-gold-400" />
+            <span>Download file</span>
+          </button>
 
           {/* Open in Drive */}
           {file.webViewLink && (

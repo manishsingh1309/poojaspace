@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Image as ImageIcon, Plus, FileText, FolderHeart } from 'lucide-react';
+import { Home, Image as ImageIcon, Plus, Video, FolderHeart } from 'lucide-react';
 import { ActiveView } from '../../types/navigation';
 
 interface BottomNavProps {
@@ -74,23 +74,23 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           </button>
         </div>
 
-        {/* 4. Docs */}
+        {/* 4. Videos */}
         <button
-          onClick={() => onChangeView('documents')}
+          onClick={() => onChangeView('videos')}
           className={`flex-1 flex flex-col items-center justify-center py-1 transition-all min-touch-target ${
-            activeView === 'documents'
+            activeView === 'videos'
               ? 'text-amber-400 font-extrabold'
               : 'text-zinc-400 hover:text-zinc-200 active:scale-95'
           }`}
-          aria-label="Documents Vault"
+          aria-label="Videos Library"
         >
-          <FileText
+          <Video
             className={`w-5 h-5 transition-transform ${
-              activeView === 'documents' ? 'scale-110 text-amber-400 stroke-[2.5]' : 'stroke-[1.8]'
+              activeView === 'videos' ? 'scale-110 text-amber-400 stroke-[2.5]' : 'stroke-[1.8]'
             }`}
           />
-          <span className="text-[10px] mt-1 font-semibold tracking-tight leading-none">Docs</span>
-          {activeView === 'documents' && (
+          <span className="text-[10px] mt-1 font-semibold tracking-tight leading-none">Videos</span>
+          {activeView === 'videos' && (
             <span className="w-1 h-1 rounded-full bg-amber-400 mt-0.5 shadow-gold-glow" />
           )}
         </button>

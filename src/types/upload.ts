@@ -1,3 +1,5 @@
+import { DriveFile } from './drive';
+
 export type UploadStatus =
   | 'queued'
   | 'waiting_for_auth'
@@ -27,6 +29,7 @@ export interface UploadItem {
   retriesCount: number;
   createdAt: number;
   completedFileId?: string;
+  completedFile?: DriveFile;
 }
 
 export interface PendingShareItem {

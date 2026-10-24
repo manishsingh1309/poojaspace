@@ -26,22 +26,32 @@ export const UploadProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [queue, setQueue] = useState<UploadItem[]>(uploadEngine.getQueue());
   const [pendingShares, setPendingShares] = useState<PendingShareItem[]>([]);
   const [isQueueModalOpen, setQueueModalOpen] = useState(false);
-  const { refreshFiles, knownFolders } = useDrive();
+  const { refreshFiles, addUploadedFile, knownFolders } = useDrive();
 
   // Subscribe to UploadEngine updates
   useEffect(() => {
+    const lastCompletedIds = new Set<string>();
+
     const unsubscribe = uploadEngine.subscribe((items) => {
       setQueue(items);
 
-      // Check if any item just completed
-      const hasCompleted = items.some((i) => i.status === 'completed');
-      if (hasCompleted) {
+      // Check for newly completed items and add them immediately
+      let anyNew = false;
+      items.forEach((item) => {
+        if (item.status === 'completed' && item.completedFile && !lastCompletedIds.has(item.id)) {
+          lastCompletedIds.add(item.id);
+          addUploadedFile(item.completedFile);
+          anyNew = true;
+        }
+      });
+
+      if (anyNew) {
         refreshFiles();
       }
     });
 
     return () => unsubscribe();
-  }, [refreshFiles]);
+  }, [addUploadedFile, refreshFiles]);
 
   // Load pending shares from IndexedDB (e.g. from Web Share Target)
   const refreshPendingShares = useCallback(async () => {
@@ -71,9 +81,39 @@ export const UploadProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const addFiles = (files: File[], targetFolderId?: string, targetFolderName?: string) => {
     if (files.length === 0) return;
-    const folderId = targetFolderId || knownFolders?.photosId;
-    const folderName = targetFolderName || 'Photos';
-    uploadEngine.addFiles(files, folderId, folderName);
+
+    if (targetFolderId && targetFolderName) {
+      uploadEngine.addFiles(files, targetFolderId, targetFolderName);
+    } else {
+      // Auto-categorize each file by type
+      files.forEach((file) => {
+        let fId = knownFolders?.photosId;
+        let fName = 'Photos';
+
+        if (file.type.startsWith('video/') || /\.(mp4|mov|mkv|webm|avi|3gp)$/i.test(file.name)) {
+          fId = knownFolders?.videosId || fId;
+          fName = 'Videos';
+        } else if (
+          file.type.includes('pdf') ||
+          file.type.includes('document') ||
+          file.type.includes('sheet') ||
+          file.type.includes('text') ||
+          /\.(pdf|docx?|xlsx?|txt|md|csv)$/i.test(file.name)
+        ) {
+          fId = knownFolders?.documentsId || fId;
+          fName = 'Documents';
+        } else if (file.type.startsWith('image/')) {
+          fId = knownFolders?.photosId || fId;
+          fName = 'Photos';
+        } else {
+          fId = knownFolders?.audioOtherId || fId;
+          fName = 'Audio & Other Files';
+        }
+
+        uploadEngine.addFiles([file], fId, fName);
+      });
+    }
+
     setQueueModalOpen(true);
   };
 

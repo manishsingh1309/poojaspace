@@ -8,6 +8,7 @@ import { RecentMemories } from './components/home/RecentMemories';
 import { PersonalNote } from './components/home/PersonalNote';
 import { FilterSearchBar } from './components/library/FilterSearchBar';
 import { PhotoGallery } from './components/library/PhotoGallery';
+import { VideoGallery } from './components/library/VideoGallery';
 import { DocumentList } from './components/library/DocumentList';
 
 import { LightboxModal } from './components/library/LightboxModal';
@@ -27,7 +28,7 @@ import { DriveFile, DriveFolder } from './types/drive';
 import { useDrive } from './context/DriveContext';
 import { useUpload } from './context/UploadContext';
 import { useAuth } from './context/AuthContext';
-import { Image as ImageIcon, Plus, Video, FileText, Star, Sparkles } from 'lucide-react';
+import { Image as ImageIcon, Plus, Video, FileText, Star, Sparkles, FolderHeart } from 'lucide-react';
 
 
 export const App: React.FC = () => {
@@ -53,7 +54,7 @@ export const App: React.FC = () => {
   const [drawerFile, setDrawerFile] = useState<DriveFile | null>(null);
   const [videoFile, setVideoFile] = useState<DriveFile | null>(null);
 
-  const { files, knownFolders } = useDrive();
+  const { files, stats, knownFolders } = useDrive();
   const { isUploading, totalProgress, setQueueModalOpen } = useUpload();
   const { signIn } = useAuth();
 
@@ -185,10 +186,16 @@ export const App: React.FC = () => {
   }, [files, selectedCategory, activeView, searchQuery, sortOption]);
 
   const handleSelectFile = (file: DriveFile) => {
-    if (file.mimeType.startsWith('image/')) {
-      setLightboxFile(file);
-    } else if (file.mimeType.startsWith('video/')) {
+    if (
+      file.mimeType.startsWith('video/') ||
+      /\.(mp4|mov|mkv|webm|avi|3gp)$/i.test(file.name)
+    ) {
       setVideoFile(file);
+    } else if (
+      file.mimeType.startsWith('image/') ||
+      /\.(jpe?g|png|gif|webp|heic|svg|bmp)$/i.test(file.name)
+    ) {
+      setLightboxFile(file);
     } else {
       setDrawerFile(file);
     }
@@ -255,6 +262,38 @@ export const App: React.FC = () => {
             </button>
           </div>
 
+          {/* Quick Media Nav Switcher Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs font-bold">
+            <button
+              onClick={() => handleNavigate('photos')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400 text-black shadow-gold-glow-sm transition-all min-touch-target whitespace-nowrap"
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>Photos ({stats.photoCount})</span>
+            </button>
+            <button
+              onClick={() => handleNavigate('videos')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 transition-all min-touch-target whitespace-nowrap"
+            >
+              <Video className="w-3.5 h-3.5" />
+              <span>Videos ({stats.videoCount})</span>
+            </button>
+            <button
+              onClick={() => handleNavigate('documents')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 transition-all min-touch-target whitespace-nowrap"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Docs ({stats.documentCount})</span>
+            </button>
+            <button
+              onClick={() => handleNavigate('albums')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 transition-all min-touch-target whitespace-nowrap"
+            >
+              <FolderHeart className="w-3.5 h-3.5" />
+              <span>Albums ({stats.albumCount})</span>
+            </button>
+          </div>
+
           <FilterSearchBar
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
@@ -291,10 +330,10 @@ export const App: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
-                <span>Videos</span>
+                <span>Videos &amp; Streams</span>
                 <Sparkles className="w-4 h-4 text-amber-400 fill-amber-400" />
               </h2>
-              <p className="text-xs text-zinc-400">Recorded clips and memories</p>
+              <p className="text-xs text-zinc-400">Recorded clips and memories streaming from Drive</p>
             </div>
             <button
               onClick={() => openQuickAddForFolder(knownFolders?.videosId, 'Videos')}
@@ -302,6 +341,38 @@ export const App: React.FC = () => {
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Videos</span>
+            </button>
+          </div>
+
+          {/* Quick Media Nav Switcher Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs font-bold">
+            <button
+              onClick={() => handleNavigate('photos')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 transition-all min-touch-target whitespace-nowrap"
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>Photos ({stats.photoCount})</span>
+            </button>
+            <button
+              onClick={() => handleNavigate('videos')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400 text-black shadow-gold-glow-sm transition-all min-touch-target whitespace-nowrap"
+            >
+              <Video className="w-3.5 h-3.5" />
+              <span>Videos ({stats.videoCount})</span>
+            </button>
+            <button
+              onClick={() => handleNavigate('documents')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 transition-all min-touch-target whitespace-nowrap"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Docs ({stats.documentCount})</span>
+            </button>
+            <button
+              onClick={() => handleNavigate('albums')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 transition-all min-touch-target whitespace-nowrap"
+            >
+              <FolderHeart className="w-3.5 h-3.5" />
+              <span>Albums ({stats.albumCount})</span>
             </button>
           </div>
 
@@ -321,13 +392,17 @@ export const App: React.FC = () => {
             <EmptyState
               icon={<Video className="w-8 h-8 text-gold-400" />}
               title="No videos found"
-              description="Upload video clips to watch them safely anytime."
+              description="Upload video clips to watch and stream them safely anytime."
               actionLabel="Add video"
               onAction={() => openQuickAddForFolder(knownFolders?.videosId, 'Videos')}
               actionIcon={<Plus className="w-4 h-4" />}
             />
           ) : (
-            <DocumentList files={filteredFiles} onSelectFile={handleSelectFile} />
+            <VideoGallery
+              files={filteredFiles}
+              onSelectVideo={handleSelectFile}
+              isGridView={isGridView}
+            />
           )}
         </div>
       )}
@@ -440,12 +515,19 @@ export const App: React.FC = () => {
         defaultFolderName={quickAddFolderName}
       />
 
-      <UploadQueueModal />
+      <UploadQueueModal
+        onSelectFile={handleSelectFile}
+        onNavigateView={(view) => handleNavigate(view)}
+      />
 
       <LightboxModal
         isOpen={Boolean(lightboxFile)}
         onClose={() => setLightboxFile(null)}
-        files={files.filter((f) => f.mimeType.startsWith('image/'))}
+        files={files.filter(
+          (f) =>
+            f.mimeType.startsWith('image/') ||
+            /\.(jpe?g|png|gif|webp|heic|svg|bmp)$/i.test(f.name)
+        )}
         currentFile={lightboxFile}
         onNavigate={(f) => setLightboxFile(f)}
         onOpenDetails={(f) => setDrawerFile(f)}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DriveFolder, DriveFile } from '../../types/drive';
 import { Plus, FolderHeart, Image as ImageIcon } from 'lucide-react';
 import { CreateAlbumModal } from './CreateAlbumModal';
+import { DriveImage } from '../common/DriveImage';
 
 interface AlbumGridProps {
   albums: DriveFolder[];
@@ -16,12 +17,13 @@ export const AlbumGrid: React.FC<AlbumGridProps> = ({
 }) => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  // Helper to find cover thumbnail for an album
-  const getAlbumCover = (albumId: string) => {
-    const file = files.find(
-      (f) => f.parents?.includes(albumId) && f.thumbnailLink
-    );
-    return file?.thumbnailLink || null;
+  // Helper to find cover file for an album
+  const getAlbumCoverFile = (albumId: string) => {
+    return files.find(
+      (f) =>
+        f.parents?.includes(albumId) &&
+        (f.mimeType.startsWith('image/') || f.thumbnailLink)
+    ) || null;
   };
 
   // Helper to count files in an album
@@ -61,7 +63,7 @@ export const AlbumGrid: React.FC<AlbumGridProps> = ({
 
         {/* Existing Custom Albums */}
         {albums.map((album) => {
-          const cover = getAlbumCover(album.id);
+          const coverFile = getAlbumCoverFile(album.id);
           const count = getAlbumCount(album.id);
 
           return (
@@ -72,9 +74,9 @@ export const AlbumGrid: React.FC<AlbumGridProps> = ({
             >
               {/* Cover Image or Placeholder */}
               <div className="absolute inset-0 z-0 bg-obsidian-surface">
-                {cover ? (
-                  <img
-                    src={cover}
+                {coverFile ? (
+                  <DriveImage
+                    file={coverFile}
                     alt={album.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />

@@ -138,6 +138,7 @@ export class DriveApiClient {
     options: {
       parentId?: string;
       parentIds?: string[];
+      excludeParentId?: string;
       trashed?: boolean;
       pageToken?: string;
       pageSize?: number;
@@ -160,6 +161,10 @@ export class DriveApiClient {
     } else if (options.parentIds && options.parentIds.length > 0) {
       const parentClauses = options.parentIds.map((p) => `'${p}' in parents`).join(' or ');
       conditions.push(`(${parentClauses})`);
+    }
+
+    if (options.excludeParentId) {
+      conditions.push(`not ('${options.excludeParentId}' in parents)`);
     }
 
     // Favourite filter

@@ -1,7 +1,8 @@
 import React from 'react';
 import { DriveFile } from '../../types/drive';
-import { Star, Image as ImageIcon } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { useDrive } from '../../context/DriveContext';
+import { DriveImage } from '../common/DriveImage';
 
 interface PhotoGalleryProps {
   files: DriveFile[];
@@ -26,21 +27,11 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             className="group relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800 shadow-obsidian hover:border-amber-400/60 hover:shadow-gold-glow-sm transition-all duration-300 cursor-pointer active:scale-[0.98]"
           >
             {/* Image */}
-            {file.thumbnailLink ? (
-              <img
-                src={file.thumbnailLink}
-                alt={file.name}
-                loading="lazy"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center p-3 text-zinc-600">
-                <ImageIcon className="w-8 h-8 mb-1" />
-                <span className="text-[10px] text-zinc-500 text-center truncate max-w-full">
-                  {file.name}
-                </span>
-              </div>
-            )}
+            <DriveImage
+              file={file}
+              alt={file.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
 
             {/* Top Favourite Quick Button */}
             <button

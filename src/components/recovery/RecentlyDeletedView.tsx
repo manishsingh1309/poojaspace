@@ -9,6 +9,7 @@ import { Button } from '../common/Button';
 import { ConfirmDialog } from '../common/ConfirmDialog';
 import { EmptyState } from '../common/EmptyState';
 import { useDrive } from '../../context/DriveContext';
+import { DriveImage } from '../common/DriveImage';
 
 export const RecentlyDeletedView: React.FC = () => {
   const { trashedFiles, restoreFile, permanentDeleteFile } = useDrive();
@@ -82,17 +83,13 @@ export const RecentlyDeletedView: React.FC = () => {
                 className="flex items-center justify-between p-3.5 bg-obsidian-card rounded-2xl border border-obsidian-border hover:border-gold-500/30 transition-colors shadow-soft-sm"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1 mr-3">
-                  {file.thumbnailLink ? (
-                    <img
-                      src={file.thumbnailLink}
+                  <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-obsidian-border">
+                    <DriveImage
+                      file={file}
                       alt={file.name}
-                      className="w-12 h-12 rounded-xl object-cover shrink-0 border border-obsidian-border"
+                      className="w-full h-full object-cover"
                     />
-                  ) : (
-                    <div className="w-12 h-12 rounded-xl bg-obsidian-surface border border-obsidian-border text-obsidian-text-muted flex items-center justify-center shrink-0">
-                      <Trash2 className="w-5 h-5" />
-                    </div>
-                  )}
+                  </div>
 
                   <div className="min-w-0 flex-1">
                     <h4 className="text-xs sm:text-sm font-semibold text-obsidian-text-primary truncate">

@@ -12,12 +12,25 @@ import {
   LogIn,
   ExternalLink,
   Share2,
+  Play,
+  Eye,
+  Sparkles,
 } from 'lucide-react';
 import { useUpload } from '../../context/UploadContext';
 import { useAuth } from '../../context/AuthContext';
 import { UploadItem, UploadStatus } from '../../types/upload';
+import { DriveFile } from '../../types/drive';
+import { ActiveView } from '../../types/navigation';
 
-export const UploadQueueModal: React.FC = () => {
+interface UploadQueueModalProps {
+  onSelectFile?: (file: DriveFile) => void;
+  onNavigateView?: (view: ActiveView) => void;
+}
+
+export const UploadQueueModal: React.FC<UploadQueueModalProps> = ({
+  onSelectFile,
+  onNavigateView,
+}) => {
   const {
     queue,
     totalProgress,
@@ -107,6 +120,9 @@ export const UploadQueueModal: React.FC = () => {
 
   const completedCount = queue.filter((i) => i.status === 'completed').length;
   const failedCount = queue.filter((i) => i.status === 'failed').length;
+  const activeCount = queue.filter(
+    (i) => i.status === 'uploading' || i.status === 'initializing_session' || i.status === 'verifying'
+  ).length;
 
   return (
     <Modal
@@ -146,6 +162,42 @@ export const UploadQueueModal: React.FC = () => {
                 >
                   Clear completed
                 </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Celebration & Quick View Action Banner */}
+        {completedCount > 0 && activeCount === 0 && (
+          <div className="bg-amber-400/10 border border-amber-400/30 p-3.5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-400 fill-amber-400 shrink-0" />
+              <span className="text-xs font-bold text-white">
+                Files saved safely! You can view or stream them now.
+              </span>
+            </div>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              {onNavigateView && (
+                <>
+                  <button
+                    onClick={() => {
+                      onNavigateView('photos');
+                      setQueueModalOpen(false);
+                    }}
+                    className="flex-1 sm:flex-initial px-3 py-1.5 rounded-xl gold-button text-xs font-bold shadow-sm"
+                  >
+                    View Photos
+                  </button>
+                  <button
+                    onClick={() => {
+                      onNavigateView('videos');
+                      setQueueModalOpen(false);
+                    }}
+                    className="flex-1 sm:flex-initial px-3 py-1.5 rounded-xl bg-zinc-800 text-zinc-200 border border-zinc-700 hover:text-white text-xs font-bold"
+                  >
+                    Watch Videos
+                  </button>
+                </>
               )}
             </div>
           </div>
@@ -253,6 +305,35 @@ export const UploadQueueModal: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
+                    {/* Instant Play / View button for completed files */}
+                    {item.status === 'completed' && onSelectFile && (
+                      <button
+                        onClick={() => {
+                          if (item.completedFile) {
+                            onSelectFile(item.completedFile);
+                            setQueueModalOpen(false);
+                          } else if (onNavigateView) {
+                            onNavigateView(item.type.startsWith('video/') ? 'videos' : 'photos');
+                            setQueueModalOpen(false);
+                          }
+                        }}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-400 text-black font-bold text-[11px] shadow-sm hover:scale-105 active:scale-95 transition-all"
+                        title={item.type.startsWith('video/') ? 'Play Video' : 'View Photo'}
+                      >
+                        {item.type.startsWith('video/') ? (
+                          <>
+                            <Play className="w-3 h-3 fill-black" />
+                            <span>Play</span>
+                          </>
+                        ) : (
+                          <>
+                            <Eye className="w-3 h-3" />
+                            <span>View</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+
                     {getStatusBadge(item.status, item.error)}
 
                     {item.status === 'failed' && (

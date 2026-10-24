@@ -1,6 +1,7 @@
 import { UploadItem, UploadStatus } from '../types/upload';
 import { driveApiClient } from './driveApiClient';
 import { googleAuthService } from './googleAuthService';
+import { mediaStreamService } from './mediaStreamService';
 
 // Chunk size must be a multiple of 256 KiB (262,144 bytes).
 // 1 MiB = 1,048,576 bytes = 4 * 256 KiB
@@ -226,6 +227,14 @@ export class UploadEngine {
       }
 
       item.completedFileId = verified.id;
+      item.completedFile = verified;
+      // Pre-cache local file blob in mediaStreamService so it displays/streams instantly
+      try {
+        mediaStreamService.cacheLocalBlob(verified.id, item.file);
+      } catch (e) {
+        // Safe ignore
+      }
+
       item.status = 'completed';
       item.progressPercentage = 100;
       item.bytesUploaded = item.size;
